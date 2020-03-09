@@ -11,8 +11,8 @@ def rain(pixels):
     min_drops = 1
     max_drops = 3
     min_delay = 0
-    max_delay = 50
-    fade_length = 70
+    max_delay = 15
+    fade_length = 90
     pixels.fill(fill_color)
     pixels.show()
     
