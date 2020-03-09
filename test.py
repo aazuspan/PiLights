@@ -14,45 +14,6 @@ dark_blue = [0, 0, 50]
 pixels = neopixel.NeoPixel(constants.GPIO_PIN, constants.PIXEL_COUNT, pixel_order=constants.BRG, auto_write=False)
 
 
-def solid_fade(color, delay_ms=0, min_brightness=constants.MIN_BRIGHTNESS, max_brightness=constants.MAX_BRIGHTNESS):
-    solid_fade_up(color, delay_ms, min_brightness, max_brightness)
-    solid_fade_down(color, delay_ms, min_brightness, max_brightness)
-
-
-def solid_fade_up(color, delay_ms, min_brightness, max_brightness):
-    brightness_delta = 1
-    
-    # Change starting color to minimum version of color
-    for band, val in enumerate(color):
-        if val != 0:
-            color[band] = min_brightness
-            
-    faded_color = color
-
-    for i in range(min_brightness, max_brightness):
-        faded_color = change_brightness(faded_color, brightness_delta)
-        pixels.fill(faded_color)
-        pixels.show()
-        time.sleep(delay_ms/1000)
-
-
-def solid_fade_down(color, delay_ms, min_brightness, max_brightness):
-    brightness_delta = -1
-    
-    # Change starting color to maximum version of color
-    for band, val in enumerate(color):
-        if val != 0:
-            color[band] = max_brightness
-            
-    faded_color = color
-
-    for i in range(min_brightness, max_brightness):
-        faded_color = change_brightness(faded_color, brightness_delta)
-        pixels.fill(faded_color)
-        pixels.show()
-        time.sleep(delay_ms/1000)
-
-
 def random_fades(r, g, b):
     random_colors = []
     
@@ -82,6 +43,7 @@ def random_fades(r, g, b):
         #time.sleep(10/1000)
         pixels.show()
 
+
 def twinkle():
     current_pixels = []
     # Indicates the probability of a pixel randomly being on or off
@@ -107,7 +69,7 @@ comet = Comet(pixels)
 
 while True:
     comet.render()
-    
+
     #twinkle()
     #random_fades(255, 255, 0)
     #rain(pixels)

@@ -9,6 +9,8 @@ def change_brightness(color, delta, minimum=constants.MIN_BRIGHTNESS, maximum=co
     
     :param color: List of ints in form [r, g, b], representing color to change
     :param delta: Int amount to change brightness
+    :param minimum: Int minimum brightness to reduce values to
+    :param maximum: Int maximum brightness to increase values to
     :return : List of ints in form [r, g, b], representing changed color
     """
     new_color = []
@@ -71,3 +73,42 @@ def light_trail(pixels, trail_length, head_color, trail_color, fill_color, delay
 
         time.sleep(delay_ms / 1000)
         pixels.show()
+
+
+def solid_fade(pixels, color, delay_ms=0, min_brightness=constants.MIN_BRIGHTNESS, max_brightness=constants.MAX_BRIGHTNESS):
+    solid_fade_up(pixels, color, delay_ms, min_brightness, max_brightness)
+    solid_fade_down(pixels, color, delay_ms, min_brightness, max_brightness)
+
+
+def solid_fade_up(pixels, color, delay_ms, min_brightness, max_brightness):
+    brightness_delta = 1
+
+    # Change starting color to minimum version of color
+    for band, val in enumerate(color):
+        if val != 0:
+            color[band] = min_brightness
+
+    faded_color = color
+
+    for i in range(min_brightness, max_brightness):
+        faded_color = change_brightness(faded_color, brightness_delta)
+        pixels.fill(faded_color)
+        pixels.show()
+        time.sleep(delay_ms / 1000)
+
+
+def solid_fade_down(pixels, color, delay_ms, min_brightness, max_brightness):
+    brightness_delta = -1
+
+    # Change starting color to maximum version of color
+    for band, val in enumerate(color):
+        if val != 0:
+            color[band] = max_brightness
+
+    faded_color = color
+
+    for i in range(min_brightness, max_brightness):
+        faded_color = change_brightness(faded_color, brightness_delta)
+        pixels.fill(faded_color)
+        pixels.show()
+        time.sleep(delay_ms / 1000)
