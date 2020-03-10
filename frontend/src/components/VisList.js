@@ -6,17 +6,19 @@ class VisList extends React.Component {
 
     render() {
         this.visualizations = this.props.list.map((vis) =>
-            <Vis
-                key={this.props.list.indexOf(vis)}
-                name={vis.name}
-                description={vis.description}
-                startVis={this.props.startVis}>
-            </Vis>)
+            <li key={this.props.list.indexOf(vis)}>
+                <Vis
+                    name={vis.name}
+                    description={vis.description}
+                    startVis={this.props.startVis}>
+                </Vis>
+            </li>
+        )
 
         return (
-            <>
+            <ul>
                 {this.visualizations}
-            </>
+            </ul>
         )
     }
 }

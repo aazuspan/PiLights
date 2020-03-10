@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import TurnOffButton from './components/TurnOffButton';
+import Header from './components/Header';
 import VisList from './components/VisList';
 
 class App extends React.Component {
@@ -54,8 +54,8 @@ class App extends React.Component {
   render() {
     return (
       <>
+        <Header turnOffVis={this.turnOffVis} />
         <h3>Currently playing: {this.state.currentVis}</h3>
-        <TurnOffButton turnOffVis={this.turnOffVis} />
         <VisList list={this.state.list} startVis={this.startVis} />
       </>
     );
