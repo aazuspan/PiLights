@@ -1,20 +1,18 @@
 from flask import request, jsonify
 
 from . import app
-from ..Controller import Controller
+from backend.Controller import Controller
 
 
 @app.route('/', methods=['GET'])
 def index():
-    response = {}
+    response = {'list': []}
 
     if request.method == 'GET':
-        pass
-    else:
         controller = Controller()
         visualizations = controller.get_visualizations()
 
         for vis in visualizations:
-            response[vis.name] = vis.description
+            response['list'].append({'name': vis.name, 'description': vis.description})
 
     return jsonify(response)
