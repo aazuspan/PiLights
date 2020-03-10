@@ -12,10 +12,9 @@ logging.basicConfig(level=logging.DEBUG)
 # Signal to stop running visualization threads
 stop_vis_thread = False
 
-# Gives running visualization thread time to die before starting new thread. 
-# If set too low, multiple threads will run simultaneously. Time must be 
-# less than max time between stop_vis_thread checks in vis loops.
-thread_kill_time = 1
+# Number of active threads that should be running if no visualization is active
+minimum_active_threads = 2
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -33,14 +32,34 @@ def index():
             response['list'] = vis_list
 
         elif request.args['type'] == 'startVis':
-            stop_vis_thread = True
-            # Give previous thread enough time to die. Sleep time must be less than  on the max length of the vis loop
-            time.sleep(thread_kill_time)
+            stop_vis_threads()
 
             vis_thread = threading.Thread(target=run_vis, args=(request.args['visName'],))
             vis_thread.start()
 
+        elif request.args['type'] == 'stopVis':
+            stop_vis_threads()
+            # TODO: tell the controller to deinit the neopixels
+
     return jsonify(response)
+
+def stop_vis_threads():
+    """
+    Kill any visualization threads that are currently running by setting the stop signal
+    and waiting long enough for threads to see the signal and die. Wait time is set
+    by checking how many threads are running, and waiting until that count reaches
+    what should be the baseline number of threads. 
+    
+    If something else adds more threads or reduces the number of threads below the 
+    minimum_active_threads, this could get stuck in an infinite loop or fail to close
+    threads.
+    """
+    global stop_vis_thread
+
+    while threading.active_count() > minimum_active_threads:
+        logging.debug(f'Killing threads... {threading.active_count() - minimum_active_threads} remaining')
+        stop_vis_thread = True
+        time.sleep(0.1)
 
 # TODO: Replace mock function with call to Controller to run vis.render based on vis name
 def run_vis(name):
