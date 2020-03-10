@@ -8,6 +8,7 @@ class App extends React.Component {
 
   state = {
     list: [],
+    currentVis: 'Off',
   }
 
   componentDidMount = () => {
@@ -22,6 +23,7 @@ class App extends React.Component {
     })
   }
 
+
   startVis = (visName) => {
     axios.get("http://127.0.0.1:5000", {
       params: {
@@ -29,6 +31,11 @@ class App extends React.Component {
         visName: visName,
       }
     })
+      .then((res) => {
+        this.setState({
+          currentVis: visName,
+        })
+      })
   }
 
   turnOffVis = () => {
@@ -37,11 +44,17 @@ class App extends React.Component {
         type: "stopVis",
       }
     })
+      .then((res) => {
+        this.setState({
+          currentVis: 'Off',
+        })
+      })
   }
 
   render() {
     return (
       <>
+        <h3>Currently playing: {this.state.currentVis}</h3>
         <TurnOffButton turnOffVis={this.turnOffVis} />
         <VisList list={this.state.list} startVis={this.startVis} />
       </>
