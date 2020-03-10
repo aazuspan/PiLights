@@ -11,7 +11,9 @@ class App extends React.Component {
 
   componentDidMount = () => {
     axios.get("http://127.0.0.1:5000", {
-      type: "get_list"
+      params: {
+        type: "getList",
+      }
     }).then((res) => {
       this.setState({
         list: res.data.list,
@@ -20,8 +22,12 @@ class App extends React.Component {
   }
 
   startVis = (visName) => {
-    // TODO: Make get request with this name to activate the render method for that vis
-    console.log(visName);
+    axios.get("http://127.0.0.1:5000", {
+      params: {
+        type: "startVis",
+        visName: visName,
+      }
+    })
   }
 
   render() {
