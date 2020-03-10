@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+import TurnOffButton from './components/TurnOffButton';
 import VisList from './components/VisList';
 
 class App extends React.Component {
@@ -30,9 +31,20 @@ class App extends React.Component {
     })
   }
 
+  turnOffVis = () => {
+    axios.get("http://127.0.0.1:5000", {
+      params: {
+        type: "stopVis",
+      }
+    })
+  }
+
   render() {
     return (
-      <VisList list={this.state.list} startVis={this.startVis} />
+      <>
+        <TurnOffButton turnOffVis={this.turnOffVis} />
+        <VisList list={this.state.list} startVis={this.startVis} />
+      </>
     );
   }
 }
