@@ -51,10 +51,16 @@ class App extends React.Component {
       })
   }
 
+  // Turns on the last played visualization
+  turnOnVis = () => {
+    // TODO: Set last played vis in local memory and load it
+    this.startVis('Rain');
+  }
+
   render() {
     return (
       <>
-        <Header turnOffVis={this.turnOffVis} />
+        <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} />
         <h3>Currently playing: {this.state.currentVis}</h3>
         <VisList list={this.state.list} startVis={this.startVis} />
       </>
