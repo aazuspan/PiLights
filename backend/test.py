@@ -1,9 +1,8 @@
 import neopixel
 import random
 
-from visualizations.Comet import Comet
-import constants
-from utils import *
+from backend.visualizations import Comet
+from backend.utils import *
 
 
 red = [255, 0, 0]

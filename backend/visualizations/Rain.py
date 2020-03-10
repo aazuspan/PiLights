@@ -1,9 +1,8 @@
 import random
 import time
 
-import constants
-import utils
-from visualizations.Visualization import Visualization
+from backend import utils, constants
+from backend.visualizations.Visualization import Visualization
 
 
 class Rain(Visualization):
@@ -23,10 +22,10 @@ class Rain(Visualization):
         self.pixels.show()
 
         num_drops = random.randint(self.min_drops, self.max_drops)
-        drop_indexes = [random.randint(0, constants.PIXEL_COUNT -1) for i in range(num_drops)]
+        drop_indexes = [random.randint(0, constants.PIXEL_COUNT - 1) for i in range(num_drops)]
 
         faded_color = self.drop_color
-        brightness_delta = -int(constants.MAX_BRIGHTNESS/self.fade_length)
+        brightness_delta = -int(constants.MAX_BRIGHTNESS / self.fade_length)
 
         # Fade drop color
         for i in range(0, self.fade_length):

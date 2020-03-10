@@ -1,5 +1,5 @@
 import time
-import constants
+from backend import constants
 
 
 # TODO: Refactor this to use change_value function

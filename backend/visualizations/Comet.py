@@ -1,5 +1,5 @@
-from utils import light_trail
-from visualizations.Visualization import Visualization
+from backend.utils import light_trail
+from backend.visualizations.Visualization import Visualization
 
 
 class Comet(Visualization):
