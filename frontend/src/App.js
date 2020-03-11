@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
+import Banner from './components/Banner';
 import Header from './components/Header';
 import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
@@ -77,11 +78,19 @@ class App extends React.Component {
   }
 
   render() {
+    let bannerContent = this.state.currentVis
+      ? `Playing: ${this.state.currentVis} `
+      : null
+
+    let banner = this.state.currentVis
+      ? <Banner content={bannerContent} />
+      : null
+
     return (
       <>
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
         <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
-        <h3>Currently playing: {this.state.currentVis}</h3>
+        {banner}
         <VisList list={this.state.list} startVis={this.startVis} />
       </>
     );
