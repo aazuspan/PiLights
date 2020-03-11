@@ -21,7 +21,7 @@ body {
     right: 0;
     bottom: 0;
     text-align: center;
-    
+    z-index: 99;
 }
 
 .spinner-screen .spinner-border {
@@ -74,13 +74,17 @@ ul {
     color: white;
 }
 
+.vis-list {
+    margin-top: 20px;
+    text-align: center;
+}
+
 .vis-box {
     box-sizing: border-box;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
+    width: 90%;
     padding: 6px;
-    margin: 0px 0px 6px 6px;
+    margin-bottom: 6px;
+    text-align: left;
 }
 
 .vis-box h5, .vis-box p, .vis-box hr {
@@ -89,11 +93,4 @@ ul {
 
 .vis-box h5 {
     text-align: center;
-}
-
-.vis-box {
-    text-align: left;
-}
-
-.vis-list {
 }
