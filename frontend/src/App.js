@@ -9,13 +9,18 @@ import VisList from './components/VisList';
 class App extends React.Component {
 
   state = {
-    list: [],
+    visList: [],
+    categoryList: [],
     filter: '',
     currentVis: null,
     spinnerClass: 'display-none',
   }
 
   componentDidMount = () => {
+    this.getLists()
+  }
+
+  getLists = () => {
     axios.get("http://127.0.0.1:5000", {
       params: {
         type: "getList",
@@ -23,7 +28,8 @@ class App extends React.Component {
       }
     }).then((res) => {
       this.setState({
-        list: res.data.list,
+        visList: res.data.vis_list,
+        categoryList: res.data.category_list,
       });
     })
   }
@@ -79,6 +85,12 @@ class App extends React.Component {
     this.startVis('Rain');
   }
 
+  filterVis = (categoryName) => {
+    this.setState({
+      filter: categoryName,
+    }, () => { this.getLists(); });
+  }
+
   render() {
     let bannerContent = this.state.currentVis
       ? `Playing: ${this.state.currentVis} `
@@ -93,7 +105,7 @@ class App extends React.Component {
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
         <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
         {banner}
-        <VisList list={this.state.list} startVis={this.startVis} />
+        <VisList visList={this.state.visList} categoryList={this.state.categoryList} startVis={this.startVis} filter={this.state.filter} filterVis={this.filterVis} />
       </>
     );
   }

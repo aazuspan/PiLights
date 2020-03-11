@@ -25,11 +25,17 @@ def index():
     if request.method == 'GET':
         if request.args['type'] == 'getList':
             controller = Controller()
-            visualizations = controller.get_visualizations(filter_category=request.args['filter'])
+            vis_categories = controller.get_categories()
+            vis_category_list = []
+            for vis_category in vis_categories:
+                vis_category_list.append({'name': vis_category, 'description': None})
+            response['category_list'] = vis_category_list
+        
+            visualizations = controller.get_visualizations_by_category(request.args['filter'])
             vis_list = []
             for vis in visualizations:
                 vis_list.append({'name': vis.name, 'description': vis.description})
-            response['list'] = vis_list
+            response['vis_list'] = vis_list
 
         elif request.args['type'] == 'startVis':
             stop_vis_threads()

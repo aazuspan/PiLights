@@ -1,4 +1,4 @@
-LIGHT_TRAIL = 'light_trail'
-OTHER = 'other'
-FADE = 'fade'
-SOLID = 'solid'
+LIGHT_TRAIL = 'Light Trails'
+OTHER = 'Other'
+FADE = 'Fading Colors'
+SOLID = 'Solid Colors'
