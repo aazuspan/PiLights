@@ -12,8 +12,8 @@ logging.basicConfig(level=logging.DEBUG)
 # Signal to stop running visualization threads
 stop_vis_thread = False
 
-# Number of active threads that should be running if no visualization is active
-minimum_active_threads = 2
+# Time to wait for visualization threads to read stop_vis_thread and die
+thread_kill_time = 1
 
 
 @app.route('/', methods=['GET'])
@@ -46,20 +46,14 @@ def index():
 def stop_vis_threads():
     """
     Kill any visualization threads that are currently running by setting the stop signal
-    and waiting long enough for threads to see the signal and die. Wait time is set
-    by checking how many threads are running, and waiting until that count reaches
-    what should be the baseline number of threads. 
-    
-    If something else adds more threads or reduces the number of threads below the 
-    minimum_active_threads, this could get stuck in an infinite loop or fail to close
-    threads.
+    and waiting long enough for threads to see the signal and die. Wait time must be 
+    long enough for all visualization loops to read the updated stop_vis_thread and die.
     """
-    global stop_vis_thread
+    global stop_vis_thread 
 
-    while threading.active_count() > minimum_active_threads:
-        logging.debug(f'Killing threads... {threading.active_count() - minimum_active_threads} remaining')
-        stop_vis_thread = True
-        time.sleep(0.1)
+    logging.debug('Killing threads...')
+    stop_vis_thread = True
+    time.sleep(thread_kill_time)
 
 # TODO: Replace mock function with call to Controller to run vis.render based on vis name
 def run_vis(name):

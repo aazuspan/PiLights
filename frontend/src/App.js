@@ -4,7 +4,6 @@ import axios from 'axios';
 import Header from './components/Header';
 import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
-import { Spinner } from 'react-bootstrap';
 
 class App extends React.Component {
 
@@ -27,6 +26,8 @@ class App extends React.Component {
   }
 
   startVis = (visName) => {
+    this.showSpinner();
+
     axios.get("http://127.0.0.1:5000", {
       params: {
         type: "startVis",
@@ -36,14 +37,13 @@ class App extends React.Component {
       .then((res) => {
         this.setState({
           currentVis: visName,
-        })
+        });
+        this.hideSpinner();
       })
   }
 
   turnOffVis = () => {
-    this.setState({
-      spinnerClass: null,
-    })
+    this.showSpinner();
 
     axios.get("http://127.0.0.1:5000", {
       params: {
@@ -53,9 +53,21 @@ class App extends React.Component {
       .then((res) => {
         this.setState({
           currentVis: null,
-          spinnerClass: 'display-none',
-        })
+        });
+        this.hideSpinner();
       })
+  }
+
+  hideSpinner = () => {
+    this.setState({
+      spinnerClass: 'display-none',
+    })
+  }
+
+  showSpinner = () => {
+    this.setState({
+      spinnerClass: null,
+    })
   }
 
   // Turns on the last played visualization

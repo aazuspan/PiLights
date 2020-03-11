@@ -6,18 +6,21 @@ import TurnOffButton from './TurnOffButton';
 import TurnOnButton from './TurnOnButton';
 
 const Header = (props) => {
-    let powerButton = props.currentlyOn ? <TurnOffButton turnOffVis={props.turnOffVis} /> : <TurnOnButton turnOnVis={props.turnOnVis} />
+    let powerButton = props.currentlyOn
+        ? <TurnOffButton turnOffVis={props.turnOffVis} />
+        : <TurnOnButton turnOnVis={props.turnOnVis} />
 
     return (
-        <Navbar bg="dark" variant="dark" expand="lg">
-            <Navbar.Brand href="#home" className="mx-auto">Game Room Lights</Navbar.Brand>
+        <Navbar bg="dark" variant="dark" expand="true">
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Brand href="#home">
+                Game Room
+            </Navbar.Brand>
             <Nav className="ml-auto">
                 {powerButton}
             </Nav>
-
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
+                <Nav>
                     <BrightnessSlider />
                 </Nav>
             </Navbar.Collapse>
