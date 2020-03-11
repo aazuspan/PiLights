@@ -10,6 +10,7 @@ class App extends React.Component {
 
   state = {
     list: [],
+    filter: '',
     currentVis: null,
     spinnerClass: 'display-none',
   }
@@ -18,6 +19,7 @@ class App extends React.Component {
     axios.get("http://127.0.0.1:5000", {
       params: {
         type: "getList",
+        filter: this.state.filter,
       }
     }).then((res) => {
       this.setState({

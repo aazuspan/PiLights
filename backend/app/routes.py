@@ -25,7 +25,7 @@ def index():
     if request.method == 'GET':
         if request.args['type'] == 'getList':
             controller = Controller()
-            visualizations = controller.get_visualizations()
+            visualizations = controller.get_visualizations(filter_category=request.args['filter'])
             vis_list = []
             for vis in visualizations:
                 vis_list.append({'name': vis.name, 'description': vis.description})

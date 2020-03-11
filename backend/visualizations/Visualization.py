@@ -4,6 +4,7 @@ class Visualization:
 
     name = None
     description = None
+    category = None
 
     def render(self):
         return

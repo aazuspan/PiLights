@@ -3,11 +3,13 @@ import time
 
 from backend import utils, constants
 from backend.visualizations.Visualization import Visualization
+from backend.visualizations import categories
 
 
 class Rain(Visualization):
     name = 'Rain'
     description = 'Random fading blue pixels over a light blue background.'
+    category = categories.OTHER
 
     drop_color = (100, 150, 200)
     fill_color = (0, 15, 15)
