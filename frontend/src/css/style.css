@@ -1,7 +1,68 @@
+* {
+    padding: 0px;
+}
+
+body {
+    background-color: rgb(46, 46, 46);
+}
+
+.spinner-screen {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    
+}
+
+.display-none {
+    display: none;
+}
+
+.spinner-screen .spinner-border {
+    position: absolute;
+    color: white;
+    width: 60px;
+    height: 60px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
 ul {
     list-style-type: none;
 }
 
 .brightness-slider {
     color: white;
+}
+
+.vis-box {
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    padding: 6px;
+    margin: 0px 0px 6px 6px;
+}
+
+.vis-box h5, .vis-box p, .vis-box hr {
+    margin: 2px;
+}
+
+.vis-box h5 {
+    text-align: center;
+}
+
+.vis-box {
+    text-align: left;
+}
+
+.vis-list {
 }

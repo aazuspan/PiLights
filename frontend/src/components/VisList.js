@@ -16,7 +16,7 @@ class VisList extends React.Component {
         )
 
         return (
-            <ul>
+            <ul className="vis-list">
                 {this.visualizations}
             </ul>
         )

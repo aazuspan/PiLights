@@ -2,13 +2,16 @@ import React from 'react';
 import axios from 'axios';
 
 import Header from './components/Header';
+import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
+import { Spinner } from 'react-bootstrap';
 
 class App extends React.Component {
 
   state = {
     list: [],
-    currentVis: 'Off',
+    currentVis: null,
+    spinnerClass: 'display-none',
   }
 
   componentDidMount = () => {
@@ -22,7 +25,6 @@ class App extends React.Component {
       });
     })
   }
-
 
   startVis = (visName) => {
     axios.get("http://127.0.0.1:5000", {
@@ -39,6 +41,10 @@ class App extends React.Component {
   }
 
   turnOffVis = () => {
+    this.setState({
+      spinnerClass: null,
+    })
+
     axios.get("http://127.0.0.1:5000", {
       params: {
         type: "stopVis",
@@ -46,7 +52,8 @@ class App extends React.Component {
     })
       .then((res) => {
         this.setState({
-          currentVis: 'Off',
+          currentVis: null,
+          spinnerClass: 'display-none',
         })
       })
   }
@@ -60,7 +67,8 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} />
+        <SpinnerScreen spinnerClass={this.state.spinnerClass} />
+        <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
         <h3>Currently playing: {this.state.currentVis}</h3>
         <VisList list={this.state.list} startVis={this.startVis} />
       </>
