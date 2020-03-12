@@ -22,14 +22,15 @@ class App extends React.Component {
   }
 
   // Get and set list of visualizations and categories
-  getLists = () => {
+  getLists = (filterCategory = '') => {
     axios.get("http://127.0.0.1:5000", {
       params: {
         type: "getList",
-        filter: this.state.filter,
+        filter: filterCategory,
       }
     }).then((res) => {
       this.setState({
+        filter: filterCategory,
         visList: res.data.vis_list,
         categoryList: res.data.category_list,
       });
@@ -91,16 +92,14 @@ class App extends React.Component {
 
   // Add a category filter to visualizations
   filterVis = (categoryName) => {
-    this.setState({
-      filter: categoryName,
-    }, () => { this.getLists(); });
+    this.getLists(categoryName);
   }
 
   // Clear the category filter
   clearFilter = () => {
     this.setState({
       filter: '',
-    })
+    });
   }
 
   render() {
@@ -122,7 +121,7 @@ class App extends React.Component {
         <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
 
         <Breadcrumb>
-          <Breadcrumb.Item href="#" onClick={this.clearFilter}>Home</Breadcrumb.Item>
+          <Breadcrumb.Item onClick={this.clearFilter}>Home</Breadcrumb.Item>
           {breadcrumbCategory}
         </Breadcrumb>
 

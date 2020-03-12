@@ -94,3 +94,7 @@ ul {
 .vis-box h5 {
     text-align: center;
 }
+
+.breadcrumb {
+    background-color: rgba(0, 0, 0, 0.5);
+}
