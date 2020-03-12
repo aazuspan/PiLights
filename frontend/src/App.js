@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
 import Banner from './components/Banner';
 import Header from './components/Header';
@@ -20,6 +21,7 @@ class App extends React.Component {
     this.getLists()
   }
 
+  // Get and set list of visualizations and categories
   getLists = () => {
     axios.get("http://127.0.0.1:5000", {
       params: {
@@ -34,6 +36,7 @@ class App extends React.Component {
     })
   }
 
+  // Start rendering a specific visualization
   startVis = (visName) => {
     this.showSpinner();
 
@@ -51,6 +54,7 @@ class App extends React.Component {
       })
   }
 
+  // Turn off all visualizations
   turnOffVis = () => {
     this.showSpinner();
 
@@ -85,10 +89,18 @@ class App extends React.Component {
     this.startVis('Rain');
   }
 
+  // Add a category filter to visualizations
   filterVis = (categoryName) => {
     this.setState({
       filter: categoryName,
     }, () => { this.getLists(); });
+  }
+
+  // Clear the category filter
+  clearFilter = () => {
+    this.setState({
+      filter: '',
+    })
   }
 
   render() {
@@ -100,10 +112,20 @@ class App extends React.Component {
       ? <Banner content={bannerContent} />
       : null
 
+    let breadcrumbCategory = this.state.filter
+      ? <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
+      : null
+
     return (
       <>
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
         <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
+
+        <Breadcrumb>
+          <Breadcrumb.Item href="#" onClick={this.clearFilter}>Home</Breadcrumb.Item>
+          {breadcrumbCategory}
+        </Breadcrumb>
+
         {banner}
         <VisList visList={this.state.visList} categoryList={this.state.categoryList} startVis={this.startVis} filter={this.state.filter} filterVis={this.filterVis} />
       </>
