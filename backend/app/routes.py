@@ -24,18 +24,7 @@ def index():
 
     if request.method == 'GET':
         if request.args['type'] == 'getList':
-            controller = Controller()
-            vis_categories = controller.get_categories()
-            vis_category_list = []
-            for vis_category in vis_categories:
-                vis_category_list.append({'name': vis_category, 'description': None})
-            response['category_list'] = vis_category_list
-        
-            visualizations = controller.get_visualizations_by_category(request.args['filter'])
-            vis_list = []
-            for vis in visualizations:
-                vis_list.append({'name': vis.name, 'description': vis.description})
-            response['vis_list'] = vis_list
+            response = get_vis_lists(request.args['filter'])
 
         elif request.args['type'] == 'startVis':
             stop_vis_threads()
@@ -49,6 +38,30 @@ def index():
 
     return jsonify(response)
 
+
+def get_vis_lists(categoryFilter):
+    """
+    Get a list of all visualizations and visualization categories from the Controller
+    :return : Dictionary of category and visualization lists
+    """
+    response = {}
+
+    controller = Controller()
+    vis_categories = controller.get_categories()
+    vis_category_list = []
+    for vis_category in vis_categories:
+        vis_category_list.append({'name': vis_category, 'description': None})
+    response['category_list'] = vis_category_list
+
+    visualizations = controller.get_visualizations_by_category(categoryFilter)
+    vis_list = []
+    for vis in visualizations:
+        vis_list.append({'name': vis.name, 'description': vis.description})
+    response['vis_list'] = vis_list
+
+    return response
+
+
 def stop_vis_threads():
     """
     Kill any visualization threads that are currently running by setting the stop signal
@@ -60,6 +73,7 @@ def stop_vis_threads():
     logging.debug('Killing threads...')
     stop_vis_thread = True
     time.sleep(thread_kill_time)
+
 
 # TODO: Replace mock function with call to Controller to run vis.render based on vis name
 def run_vis(name):

@@ -121,7 +121,7 @@ class App extends React.Component {
         <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
 
         <Breadcrumb>
-          <Breadcrumb.Item onClick={this.clearFilter}>Home</Breadcrumb.Item>
+          <Breadcrumb.Item onClick={this.clearFilter}>Categories</Breadcrumb.Item>
           {breadcrumbCategory}
         </Breadcrumb>
 
