@@ -1,12 +1,10 @@
 from backend.utils import light_trail
 from backend.visualizations.Visualization import Visualization
-from backend.visualizations import categories
 
 
 class FireTrail(Visualization):
     name = 'Fire trail'
     description = 'A light trail with a red head and orange trail.'
-    category = categories.LIGHT_TRAIL
 
     def render(self):
         light_trail(pixels=self.pixels,
