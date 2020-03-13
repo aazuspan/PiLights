@@ -3,6 +3,10 @@
 .idea/
 __pycache__/
 
+backend/memory/memory.json
+
+.vscode/
+
 # dependencies
 frontend/node_modules
 /.pnp

@@ -18,10 +18,10 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    this.getLists()
+    this.getLists();
   }
 
-  // Get and set list of visualizations and categories
+  // Get and set list of visualizations, categories, and memory settings
   getLists = (filterCategory = '') => {
     axios.get("http://127.0.0.1:5000", {
       params: {
@@ -118,7 +118,11 @@ class App extends React.Component {
     return (
       <>
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
-        <Header turnOffVis={this.turnOffVis} turnOnVis={this.turnOnVis} currentlyOn={this.state.currentVis !== null} />
+        <Header
+          turnOffVis={this.turnOffVis}
+          turnOnVis={this.turnOnVis}
+          currentlyOn={this.state.currentVis !== null}
+        />
 
         <Breadcrumb>
           <Breadcrumb.Item onClick={this.clearFilter}>Categories</Breadcrumb.Item>
@@ -126,7 +130,12 @@ class App extends React.Component {
         </Breadcrumb>
 
         {banner}
-        <VisList visList={this.state.visList} categoryList={this.state.categoryList} startVis={this.startVis} filter={this.state.filter} filterVis={this.filterVis} />
+        <VisList
+          visList={this.state.visList}
+          categoryList={this.state.categoryList}
+          startVis={this.startVis}
+          filter={this.state.filter}
+          filterVis={this.filterVis} />
       </>
     );
   }

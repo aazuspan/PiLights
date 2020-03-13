@@ -1,17 +1,47 @@
+import axios from 'axios';
 import React from 'react';
 
 
+
 class BrightnessSlider extends React.Component {
+
     state = {
-        brightness: 10,
+        brightness: '',
     }
 
-    //TODO: Load brightness from settings
+    componentDidMount = () => {
+        this.loadBrightnessFromMemory();
+    }
+
+    // Load the last saved brightness value from the backend permanent memory
+    loadBrightnessFromMemory = () => {
+        axios.get("http://127.0.0.1:5000", {
+            params: {
+                type: "loadMemory",
+                attribute: 'brightness',
+            }
+        }).then((res) => {
+            this.setState({
+                brightness: res.data.brightness,
+            });
+        })
+    }
+
+    // Send the new brightness value to the backend to save in permanent memory
+    saveBrightnessToMemory = () => {
+        axios.get("http://127.0.0.1:5000", {
+            params: {
+                type: "saveMemory",
+                attribute: 'brightness',
+                value: this.state.brightness,
+            }
+        });
+    }
 
     handleBrightnessChange = (event) => {
         this.setState({
             brightness: event.target.value
-        })
+        }, this.saveBrightnessToMemory);
     }
 
     render() {

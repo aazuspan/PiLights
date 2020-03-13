@@ -3,6 +3,7 @@ import time
 import threading
 import logging
 
+from backend.memory.Memory import Memory
 from backend.Controller import Controller
 from backend.app import app
 
@@ -22,9 +23,21 @@ def index():
 
     response = {}
 
+    # TODO: Split these into separate routes
     if request.method == 'GET':
         if request.args['type'] == 'getList':
             response = get_vis_lists(request.args['filter'])
+
+        elif request.args['type'] == 'loadMemory':
+            attribute = request.args['attribute']
+            memory = Memory()
+            response[attribute] = memory.load(attribute)
+
+        elif request.args['type'] == 'saveMemory':
+            attribute = request.args['attribute']
+            value = request.args['value']
+            memory = Memory()
+            memory.save(attribute, value)
 
         elif request.args['type'] == 'startVis':
             stop_vis_threads()

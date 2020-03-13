@@ -2,7 +2,7 @@ import json
 import os
 
 class Memory:
-    memory_file = os.path.join('backend', 'memory', 'memory.json')
+    memory_file = os.path.join(os.getcwd(), 'memory', 'memory.json')
 
     @property
     def memory(self):
