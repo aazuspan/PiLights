@@ -45,6 +45,9 @@ def index():
             vis_thread = threading.Thread(target=run_vis, args=(request.args['visName'],))
             vis_thread.start()
 
+            memory = Memory()
+            memory.save('last_visualization', request.args['visName'])
+
         elif request.args['type'] == 'stopVis':
             stop_vis_threads()
             # TODO: tell the controller to deinit the neopixels

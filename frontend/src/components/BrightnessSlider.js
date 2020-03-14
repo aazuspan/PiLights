@@ -27,6 +27,7 @@ class BrightnessSlider extends React.Component {
         })
     }
 
+    // TODO: Have this sets brightness of pixels
     // Send the new brightness value to the backend to save in permanent memory
     saveBrightnessToMemory = () => {
         axios.get("http://127.0.0.1:5000", {

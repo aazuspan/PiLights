@@ -86,8 +86,14 @@ class App extends React.Component {
 
   // Turns on the last played visualization
   turnOnVis = () => {
-    // TODO: Set last played vis in local memory and load it
-    this.startVis('Rain');
+    axios.get("http://127.0.0.1:5000", {
+      params: {
+        type: "loadMemory",
+        attribute: 'last_visualization',
+      }
+    }).then((res) => {
+      this.startVis(res.data.last_visualization);
+    })
   }
 
   // Add a category filter to visualizations

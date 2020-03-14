@@ -3,6 +3,7 @@
 .idea/
 __pycache__/
 
+# Local app memory
 backend/memory/memory.json
 
 .vscode/
