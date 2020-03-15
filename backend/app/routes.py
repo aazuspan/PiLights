@@ -5,44 +5,71 @@ from backend.Controller import Controller
 from backend.app import app
 
 controller = Controller()
+memory = Memory()
+empty_response = ('', 204)
 
 @app.route('/', methods=['GET'])
 def index():
-    response = {}
-
-    # TODO: Split these into separate routes
-    if request.method == 'GET':
-        if request.args['type'] == 'getList':
-            response = get_vis_lists(request.args['filter'])
-
-        elif request.args['type'] == 'loadMemory':
-            attribute = request.args['attribute']
-            memory = Memory()
-            response[attribute] = memory.load(attribute)
-
-        elif request.args['type'] == 'setBrightness':
-            value = request.args['value']
-            controller.set_brightness(value)
-
-            memory = Memory()
-            memory.save('brightness', value)
-
-        elif request.args['type'] == 'saveMemory':
-            attribute = request.args['attribute']
-            value = request.args['value']
-            memory = Memory()
-            memory.save(attribute, value)
-
-        elif request.args['type'] == 'startVis':
-            controller.start_vis(request.args['visName'])
-
-            memory = Memory()
-            memory.save('last_visualization', request.args['visName'])
-
-        elif request.args['type'] == 'stopVis':
-            controller.stop_render()
+    response = get_vis_lists(request.args['filter'])
 
     return jsonify(response)
+
+
+@app.route('/set-brightness/', methods=['GET'])
+def set_brightness():
+    """
+    Set the LED strip brightness
+    """
+    value = request.args['value']
+    controller.set_brightness(value)
+
+    memory.save('brightness', value)
+
+    return empty_response
+
+
+@app.route('/save-memory/', methods=['GET'])
+def save_memory():
+    """
+    Update the value of an attribute stored in memory
+    """
+    attribute = request.args['attribute']
+    value = request.args['value']
+    memory.save(attribute, value)
+
+    return empty_response
+
+
+@app.route('/load-memory/', methods=['GET'])
+def load_memory():
+    """
+    Load and return the value of an attribute stored in memory
+    """
+    attribute = request.args['attribute']
+    response = {'value': memory.load(attribute)}
+    return jsonify(response)
+
+
+@app.route('/stop-vis/', methods=['GET'])
+def stop_visualization():
+    """
+    Stop running visualizations
+    """
+    controller.stop_render()
+
+    return empty_response
+
+
+@app.route('/start-vis/', methods=['GET'])
+def start_visualization():
+    """
+    Start running a visualization
+    """
+    controller.start_vis(request.args['visName'])
+
+    memory.save('last_visualization', request.args['visName'])
+
+    return empty_response
 
 
 def get_vis_lists(categoryFilter):

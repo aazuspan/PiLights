@@ -23,9 +23,8 @@ class App extends React.Component {
 
   // Get and set list of visualizations, categories, and memory settings
   getLists = (filterCategory = '') => {
-    axios.get("http://127.0.0.1:5000", {
+    axios.get("http://127.0.0.1:5000/", {
       params: {
-        type: "getList",
         filter: filterCategory,
       }
     }).then((res) => {
@@ -41,13 +40,12 @@ class App extends React.Component {
   startVis = (visName) => {
     this.showSpinner();
 
-    axios.get("http://127.0.0.1:5000", {
+    axios.get("http://127.0.0.1:5000/start-vis/", {
       params: {
-        type: "startVis",
         visName: visName,
       }
     })
-      .then((res) => {
+      .then(() => {
         this.setState({
           currentVis: visName,
         });
@@ -59,12 +57,8 @@ class App extends React.Component {
   turnOffVis = () => {
     this.showSpinner();
 
-    axios.get("http://127.0.0.1:5000", {
-      params: {
-        type: "stopVis",
-      }
-    })
-      .then((res) => {
+    axios.get("http://127.0.0.1:5000/stop-vis/")
+      .then(() => {
         this.setState({
           currentVis: null,
         });
@@ -86,13 +80,12 @@ class App extends React.Component {
 
   // Turns on the last played visualization
   turnOnVis = () => {
-    axios.get("http://127.0.0.1:5000", {
+    axios.get("http://127.0.0.1:5000/load-memory/", {
       params: {
-        type: "loadMemory",
         attribute: 'last_visualization',
       }
     }).then((res) => {
-      this.startVis(res.data.last_visualization);
+      this.startVis(res.data.value);
     })
   }
 
