@@ -1,26 +1,13 @@
 from flask import request, jsonify
-import time
-import threading
-import logging
 
 from backend.memory.Memory import Memory
 from backend.Controller import Controller
 from backend.app import app
 
-
-logging.basicConfig(level=logging.DEBUG)
-
-# Signal to stop running visualization threads
-stop_vis_thread = False
-
-# Time to wait for visualization threads to read stop_vis_thread and die
-thread_kill_time = 1
-
+controller = Controller()
 
 @app.route('/', methods=['GET'])
 def index():
-    global stop_vis_thread
-
     response = {}
 
     # TODO: Split these into separate routes
@@ -33,6 +20,13 @@ def index():
             memory = Memory()
             response[attribute] = memory.load(attribute)
 
+        elif request.args['type'] == 'setBrightness':
+            value = request.args['value']
+            controller.set_brightness(value)
+
+            memory = Memory()
+            memory.save('brightness', value)
+
         elif request.args['type'] == 'saveMemory':
             attribute = request.args['attribute']
             value = request.args['value']
@@ -40,17 +34,13 @@ def index():
             memory.save(attribute, value)
 
         elif request.args['type'] == 'startVis':
-            stop_vis_threads()
-
-            vis_thread = threading.Thread(target=run_vis, args=(request.args['visName'],))
-            vis_thread.start()
+            controller.start_vis(request.args['visName'])
 
             memory = Memory()
             memory.save('last_visualization', request.args['visName'])
 
         elif request.args['type'] == 'stopVis':
-            stop_vis_threads()
-            # TODO: tell the controller to deinit the neopixels
+            controller.stop_render()
 
     return jsonify(response)
 
@@ -62,7 +52,6 @@ def get_vis_lists(categoryFilter):
     """
     response = {}
 
-    controller = Controller()
     vis_categories = controller.get_categories()
     vis_category_list = []
     for vis_category in vis_categories:
@@ -76,26 +65,3 @@ def get_vis_lists(categoryFilter):
     response['vis_list'] = vis_list
 
     return response
-
-
-def stop_vis_threads():
-    """
-    Kill any visualization threads that are currently running by setting the stop signal
-    and waiting long enough for threads to see the signal and die. Wait time must be 
-    long enough for all visualization loops to read the updated stop_vis_thread and die.
-    """
-    global stop_vis_thread 
-
-    logging.debug('Killing threads...')
-    stop_vis_thread = True
-    time.sleep(thread_kill_time)
-
-
-# TODO: Replace mock function with call to Controller to run vis.render based on vis name
-def run_vis(name):
-    global stop_vis_thread
-    stop_vis_thread = False
-
-    while not stop_vis_thread:
-        logging.debug(f'running {name}')
-        time.sleep(0.5)
