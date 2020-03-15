@@ -1,12 +1,15 @@
 import axios from 'axios';
 import React from 'react';
 
-
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 
 class BrightnessSlider extends React.Component {
 
     state = {
-        brightness: '',
+        currentBrightness: '',
+        savedBrightness: '',
     }
 
     componentDidMount = () => {
@@ -22,7 +25,8 @@ class BrightnessSlider extends React.Component {
             }
         }).then((res) => {
             this.setState({
-                brightness: res.data.brightness,
+                currentBrightness: res.data.brightness,
+                savedBrightness: res.data.brightness,
             });
         })
     }
@@ -34,20 +38,28 @@ class BrightnessSlider extends React.Component {
             params: {
                 type: "saveMemory",
                 attribute: 'brightness',
-                value: this.state.brightness,
+                value: this.state.currentBrightness,
             }
-        });
+        })
+            .then(() => {
+                this.setState({
+                    savedBrightness: this.state.currentBrightness,
+                })
+            })
     }
 
     handleBrightnessChange = (event) => {
         this.setState({
-            brightness: event.target.value
-        }, this.saveBrightnessToMemory);
+            currentBrightness: event.target.value
+        });
     }
 
     render() {
+        let updateDisabled = this.state.currentBrightness === this.state.savedBrightness;
+
         return (
             <div className="brightness-slider">
+                <hr />
                 <label htmlFor="brightness" className="light">Brightness</label>
                 <input type="range"
                     className="custom-range"
@@ -55,9 +67,14 @@ class BrightnessSlider extends React.Component {
                     min="10"
                     max="255"
                     step="5"
-                    value={this.state.brightness}
-                    onChange={this.handleBrightnessChange} />
-            </div>
+                    value={this.state.currentBrightness}
+                    onChange={this.handleBrightnessChange}
+                />
+
+                <Button onClick={this.saveBrightnessToMemory} disabled={updateDisabled}>
+                    Update
+                </Button>
+            </div >
         )
     }
 }

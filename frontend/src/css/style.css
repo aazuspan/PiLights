@@ -74,6 +74,10 @@ ul {
     color: white;
 }
 
+.brightness-slider label {
+    margin: 0px;
+}
+
 .vis-list {
     margin-top: 20px;
     text-align: center;
