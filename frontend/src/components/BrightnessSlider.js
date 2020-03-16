@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 
 import Button from 'react-bootstrap/Button';
-
+import * as settings from '../settings';
 
 class BrightnessSlider extends React.Component {
 
@@ -17,7 +17,7 @@ class BrightnessSlider extends React.Component {
 
     // Load the last saved brightness value from the backend permanent memory
     loadBrightnessFromMemory = () => {
-        axios.get("http://127.0.0.1:5000/load-memory/", {
+        axios.get(settings.SERVER_ADDR + "load-memory/", {
             params: {
                 attribute: 'brightness',
             }
@@ -32,7 +32,7 @@ class BrightnessSlider extends React.Component {
     // TODO: Have this sets brightness of pixels
     // Send the new brightness value to the backend to save in permanent memory
     saveBrightnessToMemory = () => {
-        axios.get("http://127.0.0.1:5000/set-brightness/", {
+        axios.get(settings.SERVER_ADDR + "set-brightness/", {
             params: {
                 value: this.state.currentBrightness,
             }

@@ -6,6 +6,8 @@ import Banner from './components/Banner';
 import Header from './components/Header';
 import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
+import * as settings from './settings';
+
 
 class App extends React.Component {
 
@@ -23,7 +25,7 @@ class App extends React.Component {
 
   // Get and set list of categories and current visualization playing
   getCategories = () => {
-    axios.get("http://127.0.0.1:5000/")
+    axios.get(settings.SERVER_ADDR)
       .then((res) => {
         this.setState({
           categoryList: res.data.category_list,
@@ -36,7 +38,7 @@ class App extends React.Component {
   startVis = (visName) => {
     this.showSpinner();
 
-    axios.get("http://127.0.0.1:5000/start-vis/", {
+    axios.get(settings.SERVER_ADDR + "start-vis/", {
       params: {
         visName: visName,
       }
@@ -53,7 +55,7 @@ class App extends React.Component {
   turnOffVis = () => {
     this.showSpinner();
 
-    axios.get("http://127.0.0.1:5000/stop-vis/")
+    axios.get(settings.SERVER_ADDR + "stop-vis/")
       .then(() => {
         this.setState({
           currentVis: null,
@@ -76,7 +78,7 @@ class App extends React.Component {
 
   // Turns on the last played visualization
   turnOnVis = () => {
-    axios.get("http://127.0.0.1:5000/load-memory/", {
+    axios.get(settings.SERVER_ADDR + "load-memory/", {
       params: {
         attribute: 'last_visualization',
       }
@@ -87,7 +89,7 @@ class App extends React.Component {
 
   // Add a category filter to visualizations
   filterVis = (categoryName) => {
-    axios.get("http://127.0.0.1:5000/filter/", {
+    axios.get(settings.SERVER_ADDR + "filter/", {
       params: {
         category: categoryName,
       }
