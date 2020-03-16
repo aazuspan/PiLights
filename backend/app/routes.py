@@ -10,13 +10,22 @@ empty_response = ('', 204)
 
 @app.route('/', methods=['GET'])
 def index():
-    response = get_vis_categories_list()
+    """
+    Get a list of visualizations, as well as the current visualization, if one is playing
+    """
+    response = {}
+    response['category_list'] = get_vis_categories_list()
+    response['current_vis'] = controller.current_vis 
 
     return jsonify(response)
 
 @app.route('/filter/', methods=['GET'])
 def filter():
-    response = get_filtered_vis_list(request.args['category'])
+    """
+    Get list of visualizations (names and descriptions) filtered by category
+    """
+    response = {}
+    response['vis_list'] = get_filtered_vis_list(request.args['category'])
 
     return jsonify(response)
 
@@ -80,29 +89,23 @@ def start_visualization():
 def get_vis_categories_list():
     """
     Get a list of all visualization categories from the Controller
-    :return : Dictionary of category names
+    :return : List of category names
     """
-    response = {}
-
     vis_categories = controller.get_categories()
     vis_category_list = []
     for vis_category in vis_categories:
-        vis_category_list.append({'name': vis_category, 'description': None})
-    response['category_list'] = vis_category_list
+        vis_category_list.append({'name': vis_category})
 
-    return response
+    return vis_category_list
 
 def get_filtered_vis_list(category_name):
     """
     Get a list of visualizations in a given category name
-    :return : Dictionary of visualization names and descriptions in that category
+    :return : List of visualization dictionaries with names and descriptions
     """
-    response = {}
-
     visualizations = controller.get_visualizations_by_category(category_name)
     vis_list = []
     for vis in visualizations:
         vis_list.append({'name': vis.name, 'description': vis.description})
-    response['vis_list'] = vis_list
 
-    return response
+    return vis_list

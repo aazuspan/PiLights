@@ -96,6 +96,7 @@ class Controller:
         time.sleep(self.thread_kill_time)
 
         self.thread_running = False
+        self.current_vis = None
 
     def start_vis(self, name):
         """

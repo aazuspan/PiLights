@@ -18,15 +18,16 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    this.getLists();
+    this.getCategories();
   }
 
-  // Get and set list of visualizations, categories, and memory settings
-  getLists = () => {
+  // Get and set list of categories and current visualization playing
+  getCategories = () => {
     axios.get("http://127.0.0.1:5000/")
       .then((res) => {
         this.setState({
           categoryList: res.data.category_list,
+          currentVis: res.data.current_vis,
         });
       })
   }
