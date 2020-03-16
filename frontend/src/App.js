@@ -128,7 +128,7 @@ class App extends React.Component {
         />
 
         <Breadcrumb>
-          <Breadcrumb.Item onClick={this.clearFilter}>Categories</Breadcrumb.Item>
+          <Breadcrumb.Item onClick={this.clearFilter} active={this.state.filter === ''}>Categories</Breadcrumb.Item>
           {breadcrumbCategory}
         </Breadcrumb>
 

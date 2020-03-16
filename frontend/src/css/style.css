@@ -57,7 +57,7 @@ body {
 }
 
 .banner {
-    padding: 6px;
+    padding: 4px;
     background-color: rgba(0, 162, 255, 0.6);
     font-size: 20px;
     font-style: italic;
@@ -102,4 +102,5 @@ ul {
 .breadcrumb {
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0.5);
+    margin: 0;
 }

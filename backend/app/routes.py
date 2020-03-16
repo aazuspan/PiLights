@@ -99,7 +99,7 @@ def get_filtered_vis_list(category_name):
     """
     response = {}
 
-    visualizations = controller.get_visualizations_by_category('test')
+    visualizations = controller.get_visualizations_by_category(category_name)
     vis_list = []
     for vis in visualizations:
         vis_list.append({'name': vis.name, 'description': vis.description})
