@@ -10,10 +10,15 @@ empty_response = ('', 204)
 
 @app.route('/', methods=['GET'])
 def index():
-    response = get_vis_lists(request.args['filter'])
+    response = get_vis_categories_list()
 
     return jsonify(response)
 
+@app.route('/filter/', methods=['GET'])
+def filter():
+    response = get_filtered_vis_list(request.args['category'])
+
+    return jsonify(response)
 
 @app.route('/set-brightness/', methods=['GET'])
 def set_brightness():
@@ -72,10 +77,10 @@ def start_visualization():
     return empty_response
 
 
-def get_vis_lists(categoryFilter):
+def get_vis_categories_list():
     """
-    Get a list of all visualizations and visualization categories from the Controller
-    :return : Dictionary of category and visualization lists
+    Get a list of all visualization categories from the Controller
+    :return : Dictionary of category names
     """
     response = {}
 
@@ -85,7 +90,16 @@ def get_vis_lists(categoryFilter):
         vis_category_list.append({'name': vis_category, 'description': None})
     response['category_list'] = vis_category_list
 
-    visualizations = controller.get_visualizations_by_category(categoryFilter)
+    return response
+
+def get_filtered_vis_list(category_name):
+    """
+    Get a list of visualizations in a given category name
+    :return : Dictionary of visualization names and descriptions in that category
+    """
+    response = {}
+
+    visualizations = controller.get_visualizations_by_category('test')
     vis_list = []
     for vis in visualizations:
         vis_list.append({'name': vis.name, 'description': vis.description})

@@ -62,19 +62,6 @@ class Controller:
                     vis_class = None
 
         return categories
-
-    def get_visualizations(self):
-        """
-        Return all loaded Visualization subclasses
-        :return : A list of Visualization subclasses
-        """
-        vis_list = []
-
-        for vis_category in self.categories.values():
-            for vis in vis_category:
-                vis_list.append(vis)
-
-        return vis_list
     
     def get_categories(self):
         """
@@ -85,16 +72,16 @@ class Controller:
 
     def get_visualizations_by_category(self, category_name):
         """
-        Get all visualizations within a category, if provided. If not, return all.
-        :param filter_category: str name of category to return visualizations for
-        :return: A list of Visualization subclasses in the filter category, or all.
+        Get all visualizations within a category.
+        :param category_name: str name of category to return visualizations for
+        :return: A list of str names of Visualization subclasses in the filter category.
         """
         vis_list = []
 
-        if not category_name:
-            vis_list = self.get_visualizations()
-        elif category_name in list(self.categories.keys()):
+        try:
             vis_list = self.categories[category_name]
+        except KeyError:
+            raise KeyError(f'Filter category name "{category_name}" is not a valid visualization category.')
 
         return vis_list
 

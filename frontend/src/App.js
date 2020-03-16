@@ -22,18 +22,13 @@ class App extends React.Component {
   }
 
   // Get and set list of visualizations, categories, and memory settings
-  getLists = (filterCategory = '') => {
-    axios.get("http://127.0.0.1:5000/", {
-      params: {
-        filter: filterCategory,
-      }
-    }).then((res) => {
-      this.setState({
-        filter: filterCategory,
-        visList: res.data.vis_list,
-        categoryList: res.data.category_list,
-      });
-    })
+  getLists = () => {
+    axios.get("http://127.0.0.1:5000/")
+      .then((res) => {
+        this.setState({
+          categoryList: res.data.category_list,
+        });
+      })
   }
 
   // Start rendering a specific visualization
@@ -91,7 +86,16 @@ class App extends React.Component {
 
   // Add a category filter to visualizations
   filterVis = (categoryName) => {
-    this.getLists(categoryName);
+    axios.get("http://127.0.0.1:5000/filter/", {
+      params: {
+        category: categoryName,
+      }
+    }).then((res) => {
+      this.setState({
+        filter: categoryName,
+        visList: res.data.vis_list,
+      });
+    })
   }
 
   // Clear the category filter
