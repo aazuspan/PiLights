@@ -1,6 +1,7 @@
 import importlib
 import pkgutil
 import logging
+import neopixel
 import os
 import threading
 import time
@@ -13,23 +14,28 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Controller:
     # Time to wait for visualization threads to read kill_threads and die
-    thread_kill_time = 1
+    thread_kill_time = 2.5
 
     def __init__(self):
+        self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
+                                        constants.PIXEL_COUNT,
+                                        pixel_order=constants.BRG,
+                                        auto_write=False)
         self.visualization_categories = self.load_visualizations()
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
-
-    # TODO: Implement setting strip brightness
+    
     def set_brightness(self, value):
-        pass
+        self.pixels.brightness = int(value)/255
 
-    # TODO: Implement deiniting pixels
     def stop_render(self):
         self.stop_vis_threads()
-        pass
-
+            
+    def clear_pixels(self):
+        self.pixels.fill((0, 0, 0))
+        self.pixels.show()
+    
     def load_visualizations(self):
         """
         Import all Visualization subclasses in subfolders of the visualization directory and return a dictionary 
@@ -109,7 +115,7 @@ class Controller:
         time.sleep(self.thread_kill_time)
 
         self.thread_running = False
-        self.current_vis = None
+
 
     def start_vis(self, name):
         """
@@ -118,26 +124,26 @@ class Controller:
         new thread.
         :param name: str name of visualization to run
         """
-        self.current_vis = name
+        vis_class = self.get_vis_by_name(name)
+        self.current_vis = vis_class(pixels=self.pixels)
+        
+        if self.thread_running:
+            self.stop_vis_threads()
+            
+        vis_thread = threading.Thread(target=self.run_vis)
+        vis_thread.start()
 
-        if not self.thread_running:
-            vis_thread = threading.Thread(target=self.run_vis, args=(name,))
-            vis_thread.start()
-
-    def run_vis(self, name):
+    def run_vis(self):
         """
         Run a visualization render method in the background until kill_threads is triggered
-        :param name: str name of visualization to run
         """
         self.kill_threads = False
-        vis_class = self.get_vis_by_name(name)
-        vis = vis_class(pixels=None)
+        self.thread_running = True
 
-        # TODO: Enable rendering and disable logging once out of testing phase
         while not self.kill_threads:
-            # vis.render()
-            logging.debug(f'Running {vis.name}')
-            time.sleep(0.5)
+            self.current_vis.render()
+            
+        self.clear_pixels()
 
     def get_vis_by_name(self, name):
         """

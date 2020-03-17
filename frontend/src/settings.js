@@ -1,1 +1,1 @@
-export const SERVER_ADDR = "http://127.0.0.1:5000/"
+export const SERVER_ADDR = "http://192.168.7.99:5000/"
