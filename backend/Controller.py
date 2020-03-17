@@ -130,7 +130,8 @@ class Controller:
         :param name: str name of visualization to run
         """
         self.kill_threads = False
-        vis = self.get_vis_by_name(name)
+        vis_class = self.get_vis_by_name(name)
+        vis = vis_class(pixels=None)
 
         # TODO: Enable rendering and disable logging once out of testing phase
         while not self.kill_threads:
