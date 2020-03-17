@@ -16,7 +16,7 @@ class Controller:
     thread_kill_time = 1
 
     def __init__(self):
-        self.categories = self.load_visualizations()
+        self.visualization_categories = self.load_visualizations()
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
@@ -60,15 +60,28 @@ class Controller:
                 # Catch errors if a file doesn't contain a class of the same name
                 except AttributeError:
                     vis_class = None
-
         return categories
     
-    def get_categories(self):
+    @property
+    def categories(self):
         """
         Get a list of categories from loaded visualizations
         :return : A list of category names as strings
         """
-        return list(self.categories.keys())
+        return list(self.visualization_categories.keys())
+
+    @property
+    def visualizations(self):
+        """
+        Get a list of all loaded Visualization subclasses
+        :return : A list of Visualization subclasses
+        """
+        visualizations = []
+
+        for category in self.visualization_categories:
+            for vis in self.visualization_categories[category]:
+                visualizations.append(vis)
+        return visualizations
 
     def get_visualizations_by_category(self, category_name):
         """
@@ -79,7 +92,7 @@ class Controller:
         vis_list = []
 
         try:
-            vis_list = self.categories[category_name]
+            vis_list = self.visualization_categories[category_name]
         except KeyError:
             raise KeyError(f'Filter category name "{category_name}" is not a valid visualization category.')
 
@@ -111,14 +124,31 @@ class Controller:
             vis_thread = threading.Thread(target=self.run_vis, args=(name,))
             vis_thread.start()
 
-    # TODO: Replace mock function with vis.render based on vis name
     def run_vis(self, name):
         """
         Run a visualization render method in the background until kill_threads is triggered
         :param name: str name of visualization to run
         """
         self.kill_threads = False
+        vis = self.get_vis_by_name(name)
 
+        # TODO: Enable rendering and disable logging once out of testing phase
         while not self.kill_threads:
-            logging.debug(f'Running {self.current_vis}')
+            # vis.render()
+            logging.debug(f'Running {vis.name}')
             time.sleep(0.5)
+
+    def get_vis_by_name(self, name):
+        """
+        Get and return a Visualization subclass whose name attribute matches the given name
+        :param name: str name of visualization to return
+        :return : class of Visualization subclass
+        """
+        for vis in self.visualizations:
+            try:
+                if vis.name == name:
+                    return vis
+            except AttributeError:
+                logging.error(f'{vis} does not contain a name attribute! Ensure that all Visualization subclasses have a name.')
+        
+        return None

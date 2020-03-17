@@ -91,7 +91,7 @@ def get_vis_categories_list():
     Get a list of all visualization categories from the Controller
     :return : List of category names
     """
-    vis_categories = controller.get_categories()
+    vis_categories = controller.categories
     vis_category_list = []
     for vis_category in vis_categories:
         vis_category_list.append({'name': vis_category})
