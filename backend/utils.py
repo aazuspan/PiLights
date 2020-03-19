@@ -112,3 +112,9 @@ def solid_fade_down(pixels, color, delay_ms, min_brightness, max_brightness):
         pixels.fill(faded_color)
         pixels.show()
         time.sleep(delay_ms / 1000)
+        
+def remap(value, current_min, current_max, target_min, target_max):
+    return (value - current_min) * (target_max - target_min) / (current_max - current_min) + target_min
+
+def sleep_ms(seconds):
+    time.sleep(seconds/1000)

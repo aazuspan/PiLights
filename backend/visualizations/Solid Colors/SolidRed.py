@@ -1,4 +1,3 @@
-from backend.utils import light_trail
 from backend.visualizations.Visualization import Visualization
 
 
@@ -7,4 +6,5 @@ class SolidRed(Visualization):
     description = 'Solid red light.'
 
     def render(self):
-        pass
+        self.pixels.fill((255, 0, 0))
+        self.pixels.show()

@@ -26,6 +26,16 @@ class Controller:
         self.thread_running = False
         self.kill_threads = False
     
+    @property
+    def current_vis_name(self):
+        """
+        Return the name of the current visualization if one is playing
+        """
+        if self.current_vis:
+            return self.current_vis.name
+        else:
+            return None
+    
     def set_brightness(self, value):
         self.pixels.brightness = int(value)/255
 
@@ -112,6 +122,7 @@ class Controller:
         """
         logging.debug('Killing threads...')
         self.kill_threads = True
+        self.current_vis = None
         time.sleep(self.thread_kill_time)
 
         self.thread_running = False
@@ -125,11 +136,11 @@ class Controller:
         :param name: str name of visualization to run
         """
         vis_class = self.get_vis_by_name(name)
-        self.current_vis = vis_class(pixels=self.pixels)
         
         if self.thread_running:
             self.stop_vis_threads()
             
+        self.current_vis = vis_class(pixels=self.pixels)
         vis_thread = threading.Thread(target=self.run_vis)
         vis_thread.start()
 

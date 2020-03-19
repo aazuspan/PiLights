@@ -15,12 +15,12 @@ def index():
     """
     response = {}
     response['category_list'] = get_vis_categories_list()
-    response['current_vis'] = controller.current_vis 
+    response['current_vis'] = controller.current_vis_name
 
     return jsonify(response)
 
 @app.route('/filter/', methods=['GET'])
-def filter():
+def filter_visualizations():
     """
     Get list of visualizations (names and descriptions) filtered by category
     """
