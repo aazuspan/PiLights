@@ -37,9 +37,11 @@ class Controller:
             return None
     
     def set_brightness(self, value):
+        logging.info(f"Setting brightness to {value}")
         self.pixels.brightness = int(value)/255
 
     def stop_render(self):
+        logging.info("Stopping rendering.")
         self.stop_vis_threads()
             
     def clear_pixels(self):
@@ -120,7 +122,6 @@ class Controller:
         and waiting long enough for threads to see the signal and die. Wait time must be 
         long enough for all visualization loops to read the updated stop_vis_thread and die.
         """
-        logging.debug('Killing threads...')
         self.kill_threads = True
         self.current_vis = None
         time.sleep(self.thread_kill_time)
@@ -135,11 +136,13 @@ class Controller:
         new thread.
         :param name: str name of visualization to run
         """
+
         vis_class = self.get_vis_by_name(name)
         
         if self.thread_running:
-            self.stop_vis_threads()
+            self.stop_render()
             
+        logging.info(f"Starting {name}")
         self.current_vis = vis_class(pixels=self.pixels)
         vis_thread = threading.Thread(target=self.run_vis)
         vis_thread.start()

@@ -22,11 +22,14 @@ class OrangeFade(Visualization):
         self.pixel_list = self.build_pixels()
             
     def build_pixels(self):
+        """
+        Build a randomized list of pixel brightnesses and directions
+        """
         pixel_list = []
         for i in range(constants.PIXEL_COUNT):
             brightness = random.randint(self.min_brightness, self.max_brightness)
             direction = random.choice((-1, 1))
-            color = [random.randint(140, 150), random.randint(150, 255), random.randint(150, 255)]
+            color = [255, 100, 5]
             pixel_list.append(FadingPixel(i, color, brightness, direction, 0, 255))
             
         return pixel_list
@@ -64,6 +67,9 @@ class FadingPixel:
         return adjusted_color
         
     def change_direction(self):
+        """
+        Reverse the direction of brightness change
+        """
         self.direction *= -1
         
     def fade(self):
