@@ -4,18 +4,19 @@ import time
 from backend.utils import sleep_ms
 from backend import utils
 from backend import constants
+from backend.visualizations.Visualization import Visualization
 
 
-class GenericRandomFade:
-    def __init__(self,
-                 pixels,
-                 color,
-                 min_brightness=constants.MIN_BRIGHTNESS,
-                 max_brightness=constants.MAX_BRIGHTNESS):
-        self.pixels = pixels
-        self.color = color
-        self.min_brightness = min_brightness
-        self.max_brightness = max_brightness
+class GenericRandomFade(Visualization):
+    name = "Generic Random Fade"
+    description = "Used to implement colored random fades."
+    hide = True
+    color = None
+    min_brightness = None
+    max_brightness = None
+    
+    def __init__(self, pixels):
+        super().__init__(pixels)
         self.pixel_list = self.build_pixels()
             
     def build_pixels(self):

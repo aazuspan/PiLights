@@ -68,11 +68,12 @@ class Controller:
                 try:
                     vis_class = getattr(module, name)
 
-                    if Visualization in vis_class.__bases__:
-                        if folder.name not in categories:
-                            categories[folder.name] = [vis_class]
-                        else:
-                            categories[folder.name].append(vis_class)
+                    if issubclass(vis_class, Visualization):
+                        if not vis_class.hide:
+                            if folder.name not in categories:
+                                categories[folder.name] = [vis_class]
+                            else:
+                                categories[folder.name].append(vis_class)
 
                 except AttributeError:
                     vis_class = None

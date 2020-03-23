@@ -5,6 +5,7 @@ class Visualization:
     name = None
     description = None
     category = None
+    hide = False
 
     def render(self):
         return
