@@ -68,16 +68,17 @@ class Controller:
                 try:
                     vis_class = getattr(module, name)
 
-                    # If it is a subclass of Visualization
                     if Visualization in vis_class.__bases__:
                         if folder.name not in categories:
                             categories[folder.name] = [vis_class]
                         else:
                             categories[folder.name].append(vis_class)
 
-                # Catch errors if a file doesn't contain a class of the same name
                 except AttributeError:
                     vis_class = None
+                    logging.warn(f'{name} does not contain class {name}. If the file is not a visualization,'
+                        ' ignore this warning. Otherwise, the visualization class name must be the same as'
+                        ' the file name.')
         return categories
     
     @property

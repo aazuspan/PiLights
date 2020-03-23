@@ -4,19 +4,16 @@ import time
 from backend.utils import sleep_ms
 from backend import utils
 from backend import constants
-from backend.visualizations.Visualization import Visualization
 
 
-class OrangeFade(Visualization):
-    name = 'Orange Fade'
-    description = 'Randomly fading orange lights.'
-    color = [255, 100, 0]
-    
+class GenericRandomFade:
     def __init__(self,
                  pixels,
+                 color,
                  min_brightness=constants.MIN_BRIGHTNESS,
                  max_brightness=constants.MAX_BRIGHTNESS):
-        super().__init__(pixels)
+        self.pixels = pixels
+        self.color = color
         self.min_brightness = min_brightness
         self.max_brightness = max_brightness
         self.pixel_list = self.build_pixels()
@@ -29,8 +26,8 @@ class OrangeFade(Visualization):
         for i in range(constants.PIXEL_COUNT):
             brightness = random.randint(self.min_brightness, self.max_brightness)
             direction = random.choice((-1, 1))
-            color = [255, 100, 5]
-            pixel_list.append(FadingPixel(i, color, brightness, direction, 0, 255))
+            color = self.color
+            pixel_list.append(FadingPixel(i, self.color, brightness, direction, self.min_brightness, self.max_brightness))
             
         return pixel_list
         
