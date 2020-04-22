@@ -1,5 +1,6 @@
 import random
 import time
+import threading
 
 from backend import utils, constants
 from backend.visualizations.Visualization import Visualization
@@ -10,33 +11,79 @@ class Fireflies(Visualization):
     description = 'Slowly fading green-yellow pixels over a dark background.'
 
     max_color = (150, 255, 0)
-    fill_color = (5, 0, 10)
-    fade_in_length = 750
-    fade_out_length = 1500
+    fill_color = (5, 0, 5)
+    
+    # Number of brightness steps during fade
+    fade_in_length = 100
+    fade_out_length = 100
+    
+    # Time delay between brightness steps during fade
+    fade_delay = 25
     
     # Delay between fireflies in ms
-    min_delay = 100
-    max_delay = 500
-
-    def render(self):
+    min_delay = 150
+    max_delay = 1000
+    
+    max_fireflies = 4
+    
+    # List of currently active firefly indexes
+    active_fireflies = []
+    
+    def __init__(self, pixels):
+        super().__init__(pixels)
         self.pixels.fill(self.fill_color)
         self.pixels.show()
+        
+    def render(self):
+        """
+        Randomly choose unoccupied indexes and create a new firefly, waiting the appropriate amount of time
+        """
+        firefly_index = None
+        
+        # Prevent having too many at one time, as this slows down the threads and causes issues
+        if len(self.active_fireflies) < self.max_fireflies:
+            # Prevent creating a firefly where one already exists
+            while not firefly_index and firefly_index not in self.active_fireflies:
+                firefly_index = random.randint(0, constants.PIXEL_COUNT - 1)
+        
+            self.create_firefly(firefly_index)
+            utils.sleep_ms(random.randint(self.min_delay, self.max_delay))
+        
+        else:
+            return
 
-        firefly_index = random.randint(0, constants.PIXEL_COUNT - 1)
+    def create_firefly(self, index):
+        """
+        Start a thread rendering a single firefly at a given index
+        """
+        print(threading.active_count())
+        firefly_thread = threading.Thread(target=self.render_firefly, args=(index,))
+        firefly_thread.start()
+        self.active_fireflies.append(index)
 
+    def render_firefly(self, index):
+        """
+        Render a firefly by fading color in and back out
+        """
         # Set starting color
         faded_color = self.fill_color
         
         # Fade firefly color in
         for i in range(self.fade_in_length):
             faded_color = utils.interpolate_color(self.fill_color, self.max_color, i/self.fade_in_length)
-            self.pixels[firefly_index] = utils.floatcolor2intcolor(faded_color)
+            self.pixels[index] = utils.floatcolor2intcolor(faded_color)
             self.pixels.show()
+            utils.sleep_ms(self.fade_delay)
         
         # Fade firefly color out
         for i in range(self.fade_out_length):
             faded_color = utils.interpolate_color(self.max_color, self.fill_color, i/self.fade_out_length)
-            self.pixels[firefly_index] = utils.floatcolor2intcolor(faded_color)
+            self.pixels[index] = utils.floatcolor2intcolor(faded_color)
             self.pixels.show()
-            
-        utils.sleep_ms(random.randint(self.min_delay, self.max_delay))
+            utils.sleep_ms(self.fade_delay)
+        
+        # Ensure that pixel ends up fill color when done
+        self.pixels[index] = self.fill_color
+        
+        self.active_fireflies.remove(index)
+        return
