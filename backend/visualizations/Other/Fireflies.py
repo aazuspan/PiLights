@@ -21,10 +21,10 @@ class Fireflies(Visualization):
     fade_delay = 25
     
     # Delay between fireflies in ms
-    min_delay = 150
-    max_delay = 1000
+    min_delay = 100
+    max_delay = 1500
     
-    max_fireflies = 4
+    max_fireflies = 20
     
     # List of currently active firefly indexes
     active_fireflies = []
@@ -33,6 +33,10 @@ class Fireflies(Visualization):
         super().__init__(pixels)
         self.pixels.fill(self.fill_color)
         self.pixels.show()
+    
+    @property
+    def active_firefly_count(self):
+        return len(self.active_fireflies)
         
     def render(self):
         """
@@ -41,9 +45,9 @@ class Fireflies(Visualization):
         firefly_index = None
         
         # Prevent having too many at one time, as this slows down the threads and causes issues
-        if len(self.active_fireflies) < self.max_fireflies:
+        if self.active_firefly_count < self.max_fireflies:
             # Prevent creating a firefly where one already exists
-            while not firefly_index and firefly_index not in self.active_fireflies:
+            while not firefly_index or firefly_index in self.active_fireflies:
                 firefly_index = random.randint(0, constants.PIXEL_COUNT - 1)
         
             self.create_firefly(firefly_index)
@@ -56,7 +60,6 @@ class Fireflies(Visualization):
         """
         Start a thread rendering a single firefly at a given index
         """
-        print(threading.active_count())
         firefly_thread = threading.Thread(target=self.render_firefly, args=(index,))
         firefly_thread.start()
         self.active_fireflies.append(index)
