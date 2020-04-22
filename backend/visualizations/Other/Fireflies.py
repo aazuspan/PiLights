@@ -23,7 +23,6 @@ class Fireflies(Visualization):
         self.pixels.show()
 
         firefly_index = random.randint(0, constants.PIXEL_COUNT - 1)
-        firefly_index = 0
 
         # Set starting color
         faded_color = self.fill_color
