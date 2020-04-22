@@ -118,3 +118,34 @@ def remap(value, current_min, current_max, target_min, target_max):
 
 def sleep_ms(seconds):
     time.sleep(seconds/1000)
+
+def floatcolor2intcolor(float_color):
+    """
+    Convert a color made of floats into a color made of ints
+    :param float_color : Tuple of floats (r, g, b)
+    :return : Tuple of ints (r, g, b)
+    """
+    int_color = []
+    
+    for i in range(len(float_color)):
+        int_color.append(int(float_color[i]))
+    
+    return int_color
+    
+def interpolate_color(start_color, end_color, weight):
+    """
+    Linearly interpolate between two colors.
+    
+    :param start_val : Tuple of ints (r, g, b) color to interpolate from
+    :param end_val : Tuple of ints (r, g, b) color to interpolate towards
+    :param weight : Float proportion of distance between start and end values to interpolate to
+    :return : Tuple of floats (r, g, b) color interpolated between start and end
+    """
+    interpolated_color = []
+    
+    for i in range(len(start_color)):
+        interpolated_band = start_color[i] + weight * (end_color[i] - start_color[i])
+        interpolated_color.append(interpolated_band)
+    
+    return interpolated_color
+
