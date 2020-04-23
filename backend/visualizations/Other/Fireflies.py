@@ -10,12 +10,12 @@ class Fireflies(Visualization):
     name = 'Fireflies'
     description = 'Slowly fading green-yellow pixels over a dark background.'
 
-    max_color = (150, 255, 0)
-    fill_color = (5, 0, 5)
+    max_color = (255, 255, 0)
+    fill_color = (0, 0, 0)
     
     # Number of brightness steps during fade
     fade_in_length = 100
-    fade_out_length = 100
+    fade_out_length = 50
     
     # Time delay between brightness steps during fade
     fade_delay = 25
@@ -37,6 +37,16 @@ class Fireflies(Visualization):
     @property
     def active_firefly_count(self):
         return len(self.active_fireflies)
+    
+    def is_index_free(self, index):
+        """
+        Check if a given index has another firefly in or directly adjacent to it
+        """
+        for i in [-1, 0, 1]:
+            if index + i in self.active_fireflies:
+                return False
+        return True
+        
         
     def render(self):
         """
@@ -46,8 +56,8 @@ class Fireflies(Visualization):
         
         # Prevent having too many at one time, as this slows down the threads and causes issues
         if self.active_firefly_count < self.max_fireflies:
-            # Prevent creating a firefly where one already exists
-            while not firefly_index or firefly_index in self.active_fireflies:
+            # Prevent creating a firefly near another
+            while not firefly_index or not self.is_index_free(firefly_index):
                 firefly_index = random.randint(0, constants.PIXEL_COUNT - 1)
         
             self.create_firefly(firefly_index)
