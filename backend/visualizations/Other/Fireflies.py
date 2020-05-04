@@ -24,7 +24,7 @@ class Fireflies(Visualization):
     min_delay = 100
     max_delay = 1500
     
-    max_fireflies = 20
+    max_fireflies = 15
     
     # List of currently active firefly indexes
     active_fireflies = []

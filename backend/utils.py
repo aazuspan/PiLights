@@ -1,3 +1,4 @@
+import math
 import time
 from backend import constants
 
@@ -149,3 +150,82 @@ def interpolate_color(start_color, end_color, weight):
     
     return interpolated_color
 
+
+def get_interpolation_bounds(dictionary, x):
+    """
+    Given a value x within the range of the keys of a dictionary, return the values of the keys that surround that value,
+    as well as the relative location of the value between those keys.
+
+    Example:
+    Determining a color range from a temperature.
+
+    dictionary = {1000: "red", 5000: "white", 10000: "blue"}
+    x = 8000
+    return = ("white", "blue", 0.6)
+    This means that the temperature 8000 falls 60% of the way between white and blue.
+
+
+    If the value x provided is outside of the dictionary bounds, the
+    nearest dictionary value will be returned.
+
+    :param dictionary: An ordered dictionary with ints or floats as keys
+    :param x: Int or float
+    :return: Tuple (lower bound, upper bound, location between)
+    """
+    closest_index = get_closest_index(dictionary.keys(), x)
+    keys = list(dictionary)
+    closest_key = keys[closest_index]
+
+    # If value is outside the bounds of the dictionary or equal to the closest value
+    if (closest_index == 0 and x < closest_key) or (closest_index == len(dictionary) - 1 and x > closest_key) or x == closest_key:
+        lower_bound_key = keys[closest_index]
+        upper_bound_key = keys[closest_index]
+        location = 1.0
+
+    # If value is between two values in the dictionary
+    else:
+        if x < keys[closest_index]:
+            lower_bound_key = keys[closest_index - 1]
+            upper_bound_key = closest_key
+
+        else:
+            lower_bound_key = closest_key
+            upper_bound_key = keys[closest_index + 1]
+
+        location = get_location(lower_bound_key, upper_bound_key, x)
+
+    lower_bound = dictionary[lower_bound_key]
+    upper_bound = dictionary[upper_bound_key]
+
+    return lower_bound, upper_bound, location
+
+
+def get_closest_index(array, x):
+    """
+    Find the index of the value in the array closest to x
+    :param array: Array of ints or floats
+    :param x: Number
+    :return: int index of the closest value in the array
+    """
+    closest = None
+    closest_diff = math.inf
+
+    for i, val in enumerate(array):
+        diff = abs(x - val)
+        if diff < closest_diff:
+            closest = i
+            closest_diff = diff
+
+    return closest
+
+
+def get_location(lower, upper, x):
+    """
+    Get the location of a value x between a lower and upper bound, from 0 to 1. For example, the location of 5 between
+    0 and 10 is 0.5. The location of 90 between 0 and 100 is 0.9.
+    :param lower: Float lower bound
+    :param upper: Float upper bound
+    :param x: Value between lower and upper
+    :return: Float location between lower and upper bounds
+    """
+    return (x - lower) / (upper - lower)
