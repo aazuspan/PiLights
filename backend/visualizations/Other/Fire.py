@@ -1,28 +1,27 @@
 import random
-import time
 
 from backend import utils, constants
 from backend.visualizations.Visualization import Visualization
 
 
-
-
 class Fire(Visualization):
     name = 'Fire'
-    description = 'Fire that grows outwards from the edges.'
+    description = 'Fire that flickers and flares up.'
 
     fire_temp = {
-        400: (5, 0, 0),
-        500: (50, 0, 0),
-        700: (75, 10, 0),
-        800: (100, 25, 0),
-        900: (150, 50, 5),
-        1000: (200, 75, 10),
+        0: (5, 0, 0),
+        200: (10, 0, 0),
+        400: (15, 0, 0),
+        500: (50, 5, 0),
+        700: (75, 15, 0),
+        800: (100, 25, 5),
+        900: (150, 50, 10),
+        1000: (200, 75, 15),
         1100: (225, 115, 20),
-        1200: (255, 135, 50),
-        1300: (255, 200, 75),
-        1400: (255, 235, 100),
-        1500: (255, 255, 150),
+        1200: (255, 135, 25),
+        1300: (255, 150, 50),
+        1400: (255, 175, 60),
+        1500: (255, 200, 75),
     }
     
     def __init__(self, pixels):
@@ -35,7 +34,7 @@ class Fire(Visualization):
             pixel.step()
         self.update_temperatures()
         self.pixels.show()
-        utils.sleep_ms(0)
+        #utils.sleep_ms(50)
 
     def update_temperatures(self):
         """
@@ -52,40 +51,54 @@ class Fire(Visualization):
 
 
 class FirePixel:
-    spark_chance = 0.001
+    spark_chance = 0.00005
+    flare_chance = 0.15
+    temp_interp_weight = 0.21
+    temp_decrease = 41
+    min_flare_temp = 50
+    max_flare_temp = 175
+    min_temperature = 400
+    max_temperature = 1500
     
     def __init__(self, fire, index):
         self.fire = fire
         self.index = index
-        self.temperature = 0
-    
-    def is_out_of_bounds(self):
-        """
-        Check if the pixel is out of bounds of the fire
-        :return : True if out of bounds, False if in bounds
-        """
-        if self.index < 0 or self.index > constants.PIXEL_COUNT - 1:
-            return True
-        return False
+        self.temperature = random.randint(0, self.max_temperature)
         
     def step(self):
         """
         Perform one frame of simulation for the fire pixel
         """
-        self.chance_to_spark()
+
         self.update_temperature()
-        self.move()
-        
         self.render()
     
     def chance_to_spark(self):
         """
         Random chance to significantly increase temperature
         """
-        if self.temperature < 1200:
-            if random.random() < self.spark_chance:
-                self.temperature = random.randint(1200, 1500)
-
+        if random.random() < self.spark_chance:
+            self.spark()
+            
+    def spark(self):
+        """
+        Increase temperature to max
+        """
+        self.temperature = self.max_temperature
+        
+    def chance_to_flare(self):
+        """
+        Random chance to increase temperature
+        """
+        if random.random() < self.flare_chance:
+            self.flare()
+            
+    def flare(self):
+        """
+        Increase temperature by a random amount
+        """
+        self.temperature = min(self.max_temperature, self.temperature + random.randint(self.min_flare_temp, self.max_flare_temp))
+        
     @property
     def color(self):
         """
@@ -96,24 +109,17 @@ class FirePixel:
         
         return interp_color
     
-    def move(self):
-        """
-        Random chance to shift position to left or right, staying within bounds of fire
-        """
-        position_offset = random.choice([0, 0, 0, 0, 0, 0, 0, 0, -1, 1])
-        new_position = self.index + position_offset
-        if new_position < 0 or new_position >= constants.PIXEL_COUNT:
-            return
-        self.index += position_offset
-    
     def update_temperature(self):
         """
-        Interpolate the temperature based on temperature of neighbouring pixels
+        Chance to flare up, interpolate the temperature of neighbouring pixels, and decrease temperature
         """
+        self.chance_to_flare()
+        self.chance_to_spark()
+        
         neighbour_temp = self.get_average_neighbour_temperature()
         
         if self.temperature < neighbour_temp:
-            self.temperature = utils.interpolate_value(self.temperature, neighbour_temp, 0.1)
+            self.temperature = utils.interpolate_value(self.temperature, neighbour_temp, self.temp_interp_weight)
         else:
             self.decrease_temperature()
         
@@ -121,7 +127,7 @@ class FirePixel:
         """
         Reduce the temperature of the fire pixel
         """
-        self.temperature = max(0, self.temperature - random.randint(1, 20))
+        self.temperature = max(self.min_temperature, self.temperature - self.temp_decrease)
     
     def get_average_neighbour_temperature(self):
         """
