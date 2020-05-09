@@ -24,7 +24,7 @@ class Fireflies(Visualization):
     min_delay = 100
     max_delay = 1500
     
-    max_fireflies = 15
+    max_fireflies = 8
     
     # List of currently active firefly indexes
     active_fireflies = []
@@ -42,7 +42,7 @@ class Fireflies(Visualization):
         """
         Check if a given index has another firefly in or directly adjacent to it
         """
-        for i in [-1, 0, 1]:
+        for i in [-2, -1, 0, 1, 2]:
             if index + i in self.active_fireflies:
                 return False
         return True
