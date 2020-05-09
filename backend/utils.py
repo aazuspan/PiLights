@@ -132,13 +132,24 @@ def floatcolor2intcolor(float_color):
         int_color.append(int(float_color[i]))
     
     return int_color
+
+def interpolate_value(start_value, end_value, weight):
+    """
+    Linearly interpolate between two colors.
+    
+    :param start_value : Float value to interpolate from
+    :param end_value : Float value to interpolate towards
+    :param weight : Float proportion of distance between start and end values to interpolate to
+    :return : Float value interpolated between start and end
+    """
+    return start_value + weight * (end_value - start_value)
     
 def interpolate_color(start_color, end_color, weight):
     """
     Linearly interpolate between two colors.
     
-    :param start_val : Tuple of ints (r, g, b) color to interpolate from
-    :param end_val : Tuple of ints (r, g, b) color to interpolate towards
+    :param start_color : Tuple of ints (r, g, b) color to interpolate from
+    :param end_color : Tuple of ints (r, g, b) color to interpolate towards
     :param weight : Float proportion of distance between start and end values to interpolate to
     :return : Tuple of floats (r, g, b) color interpolated between start and end
     """
@@ -147,6 +158,8 @@ def interpolate_color(start_color, end_color, weight):
     for i in range(len(start_color)):
         interpolated_band = start_color[i] + weight * (end_color[i] - start_color[i])
         interpolated_color.append(interpolated_band)
+    
+    interpolated_color = floatcolor2intcolor(interpolated_color)
     
     return interpolated_color
 
@@ -229,3 +242,16 @@ def get_location(lower, upper, x):
     :return: Float location between lower and upper bounds
     """
     return (x - lower) / (upper - lower)
+
+def floatcolor2intcolor(floatcolor):
+    """
+    Convert a tuple of floats to a list of ints. Use this to ensure colors are ints, as floats are
+    not valid inputs for Neopixel.
+    :param floatcolor: A tuple of floats, representing the bands of a color
+    :return : A list of ints, representing the bands of a color
+    """
+    intcolor = []
+    for band in floatcolor:
+        intcolor.append(int(band))
+        
+    return intcolor
