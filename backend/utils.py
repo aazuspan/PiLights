@@ -252,6 +252,11 @@ def floatcolor2intcolor(floatcolor):
     """
     intcolor = []
     for band in floatcolor:
-        intcolor.append(int(band))
+        intband = int(band)
+        if intband < 0:
+            intband = 0
+        if intband > 255:
+            intband = 255
+        intcolor.append(intband)
         
     return intcolor

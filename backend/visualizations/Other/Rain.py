@@ -12,9 +12,9 @@ class Rain(Visualization):
     drop_color = (100, 150, 200)
     fill_color = (0, 15, 15)
     min_drops = 1
-    max_drops = 3
+    max_drops = 5
     min_delay = 0
-    max_delay = 15
+    max_delay = 5
     fade_length = 90
 
     def render(self):

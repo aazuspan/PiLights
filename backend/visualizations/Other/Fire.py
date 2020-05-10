@@ -9,11 +9,11 @@ class Fire(Visualization):
     description = 'Fire that flickers and flares up.'
 
     fire_temp = {
-        0: (5, 0, 0),
-        200: (10, 0, 0),
-        400: (15, 0, 0),
-        500: (50, 5, 0),
-        700: (75, 15, 0),
+        0: (15, 0, 0),
+        200: (20, 5, 0),
+        400: (25, 10, 0),
+        500: (50, 15, 0),
+        700: (75, 20, 0),
         800: (100, 25, 5),
         900: (150, 50, 10),
         1000: (200, 75, 15),
@@ -34,7 +34,7 @@ class Fire(Visualization):
             pixel.step()
         self.update_temperatures()
         self.pixels.show()
-        #utils.sleep_ms(50)
+        utils.sleep_ms(50)
 
     def update_temperatures(self):
         """
@@ -63,7 +63,7 @@ class FirePixel:
     def __init__(self, fire, index):
         self.fire = fire
         self.index = index
-        self.temperature = random.randint(0, self.max_temperature)
+        self.temperature = random.randint(0, self.max_temperature/2)
         
     def step(self):
         """
