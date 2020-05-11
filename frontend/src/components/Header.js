@@ -5,6 +5,7 @@ import BrightnessSlider from './BrightnessSlider';
 import TurnOffButton from './TurnOffButton';
 import TurnOnButton from './TurnOnButton';
 
+
 const Header = (props) => {
     let powerButton = props.currentlyOn
         ? <TurnOffButton turnOffVis={props.turnOffVis} />

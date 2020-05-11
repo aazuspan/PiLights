@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import { Breadcrumb } from 'react-bootstrap';
 
 import Banner from './components/Banner';
 import Header from './components/Header';
 import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
+import WemoModal from './components/WemoModal';
 import * as settings from './settings';
 
 
@@ -123,7 +124,12 @@ class App extends React.Component {
 
     return (
       <>
+        <WemoModal
+          show={true}
+        />
+
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
+
         <Header
           turnOffVis={this.turnOffVis}
           turnOnVis={this.turnOnVis}

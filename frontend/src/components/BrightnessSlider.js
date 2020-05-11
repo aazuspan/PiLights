@@ -56,7 +56,7 @@ class BrightnessSlider extends React.Component {
         return (
             <div className="brightness-slider">
                 <hr />
-                <label htmlFor="brightness" className="light">Brightness</label>
+                <label htmlFor="brightness">Brightness</label>
                 <input type="range"
                     className="custom-range"
                     id="brightness"
