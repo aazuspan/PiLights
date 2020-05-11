@@ -18,6 +18,7 @@ class App extends React.Component {
     filter: '',
     currentVis: null,
     spinnerClass: 'display-none',
+    showWemo: false,
   }
 
   componentDidMount = () => {
@@ -109,6 +110,12 @@ class App extends React.Component {
     });
   }
 
+  toggleWemo = () => {
+    this.setState({
+      showWemo: !this.state.showWemo,
+    })
+  }
+
   render() {
     let bannerContent = this.state.currentVis
       ? `Playing: ${this.state.currentVis} `
@@ -125,7 +132,8 @@ class App extends React.Component {
     return (
       <>
         <WemoModal
-          show={true}
+          show={this.state.showWemo}
+          toggleWemo={this.toggleWemo}
         />
 
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
@@ -133,6 +141,7 @@ class App extends React.Component {
         <Header
           turnOffVis={this.turnOffVis}
           turnOnVis={this.turnOnVis}
+          toggleWemo={this.toggleWemo}
           currentlyOn={this.state.currentVis !== null}
         />
 

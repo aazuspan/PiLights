@@ -6,22 +6,24 @@ import WemoControl from './WemoControl';
 const WemoModal = (props) => {
     return (
         <Modal
-            {...props}
-            size="lg"
+            size="sm"
             aria-labelledby="contained-modal-title-vcenter"
             centered
+            show={props.show}
+            onHide={props.toggleWemo}
         >
+
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Wemo Control
+                    WEMO™ Control
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <WemoControl label="Ceiling Lights" />
-                <WemoControl label="Bar Lights" />
+                <WemoControl label="Ceiling Lights" checked={true} />
+                <WemoControl label="Bar Lights" checked={false} />
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+                <Button onClick={props.toggleWemo}>Close</Button>
             </Modal.Footer>
         </Modal>
     );

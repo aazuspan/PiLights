@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Button, Navbar, Nav } from 'react-bootstrap';
 
 import BrightnessSlider from './BrightnessSlider';
 import TurnOffButton from './TurnOffButton';
@@ -23,6 +23,9 @@ const Header = (props) => {
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav>
                     <BrightnessSlider />
+                </Nav>
+                <Nav>
+                    <Button onClick={props.toggleWemo}>WEMO™ Control</Button>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

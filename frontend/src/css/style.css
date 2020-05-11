@@ -104,3 +104,30 @@ ul {
     background-color: rgba(0, 0, 0, 0.5);
     margin: 0;
 }
+
+.custom-control.custom-switch {
+    margin-top: 10px;
+}
+
+.custom-switch .custom-control-label::before {
+    height: 1.25em;
+    width: 1.9em;
+    border-radius: 1em;
+    position: absolute;
+    top: 50%;
+    transform: translate(0%,-50%);
+}
+
+.custom-switch .custom-control-label::after {
+    top: 18%;
+    height: 1em;
+    left: calc(-1.75em + 2px);
+    width: 1em;
+    border-radius: 1em;
+    transform: ()
+}
+
+.custom-control-label {
+    font-size: 15pt;
+    padding-left: 10px;
+}
