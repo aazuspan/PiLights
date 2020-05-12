@@ -7,6 +7,7 @@ import Header from './components/Header';
 import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
 import WemoModal from './components/WemoModal';
+import SettingsModal from './components/SettingsModal';
 import * as settings from './settings';
 
 
@@ -19,6 +20,7 @@ class App extends React.Component {
     currentVis: null,
     spinnerClass: 'display-none',
     showWemo: false,
+    showSettings: false,
     wemos: [],
   }
 
@@ -39,7 +41,7 @@ class App extends React.Component {
   }
 
   getWemos = () => {
-    axios.get(settings.SERVER_ADDR + 'get-wemos/')
+    axios.get(settings.SERVER_ADDR + "get-wemos/")
       .then((res) => {
         this.setState({
           wemos: res.data.wemos,
@@ -131,6 +133,13 @@ class App extends React.Component {
     })
   }
 
+  // Toggle the Settings modal
+  toggleSettings = (event) => {
+    this.setState({
+      showSettings: !this.state.showSettings,
+    })
+  }
+
   // Set the power state of a Wemo device based on its MAC address
   setWemo = (newState, mac) => {
     axios.get(settings.SERVER_ADDR + "set-wemo/", {
@@ -165,12 +174,18 @@ class App extends React.Component {
           wemos={this.state.wemos}
         />
 
+        <SettingsModal
+          show={this.state.showSettings}
+          toggleSettings={this.toggleSettings}
+        />
+
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
 
         <Header
           turnOffVis={this.turnOffVis}
           turnOnVis={this.turnOnVis}
           toggleWemo={this.toggleWemo}
+          toggleSettings={this.toggleSettings}
           currentlyOn={this.state.currentVis !== null}
         />
 
