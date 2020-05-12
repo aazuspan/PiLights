@@ -12,7 +12,7 @@ from backend.visualizations.Visualization import Visualization
 logging.basicConfig(level=logging.DEBUG)
 
 # Development mode disables Raspberry Pi-specific libraries and functionality
-DEV_MODE = True
+DEV_MODE = False
 
 
 class Controller:

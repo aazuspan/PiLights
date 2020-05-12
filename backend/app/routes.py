@@ -66,9 +66,12 @@ def save_settings():
     """
     Save new settings values to memory. Multiple settings can be saved at once.
     """
-    settings = request.args['settings']
-    
-    memory.save_settings(json.loads(settings))
+    settings = json.loads(request.args['settings'])
+
+    if "Brightness" in settings.keys():
+        controller.set_brightness(settings["Brightness"])
+
+    memory.save_settings(settings)
     
     return empty_response 
 
