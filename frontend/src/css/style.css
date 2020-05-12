@@ -71,11 +71,12 @@ ul {
     list-style-type: none;
 }
 
-.brightness-slider {
-    color: white;
+.settings-slider {
+    color: black;
+    font-size: 14pt;
 }
 
-.brightness-slider label {
+.settings-slider label {
     margin: 0px;
 }
 

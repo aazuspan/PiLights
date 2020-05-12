@@ -4,6 +4,8 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import * as settings from '../settings';
 
+
+// TODO: Make this a generic setting slider component that label, min, max, step, and save/load methods can be passed to through props
 class BrightnessSlider extends React.Component {
 
     state = {
@@ -53,8 +55,7 @@ class BrightnessSlider extends React.Component {
         let updateDisabled = this.state.currentBrightness === this.state.savedBrightness;
 
         return (
-            <div className="brightness-slider">
-                <hr />
+            <div className="settings-slider">
                 <label htmlFor="brightness">Brightness</label>
                 <input type="range"
                     className="custom-range"
