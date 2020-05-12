@@ -146,6 +146,8 @@ class App extends React.Component {
 
   // Toggle the Settings modal
   toggleSettings = (event) => {
+    this.getSettings();
+
     this.setState({
       showSettings: !this.state.showSettings,
     })
@@ -181,6 +183,7 @@ class App extends React.Component {
           show={this.state.showSettings}
           toggleSettings={this.toggleSettings}
           settings={this.state.settings}
+          getSettings={this.getSettings}
         />
 
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />

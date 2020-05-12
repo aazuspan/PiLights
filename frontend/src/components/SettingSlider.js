@@ -2,7 +2,6 @@ import React from 'react';
 
 
 class SettingSlider extends React.Component {
-
     state = {
         currentValue: this.props.currentValue,
     }
@@ -11,6 +10,7 @@ class SettingSlider extends React.Component {
         this.setState({
             currentValue: event.target.value
         });
+        this.props.updateSetting(this.props.label, event.target.value);
     }
 
     render() {

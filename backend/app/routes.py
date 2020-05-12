@@ -1,4 +1,5 @@
 from flask import request, jsonify
+import json
 import pywemo
 
 from backend.memory.Memory import Memory
@@ -73,6 +74,16 @@ def load_settings():
     response = {'settings': memory.get_settings()}
     return jsonify(response)
 
+@app.route('/save-settings/', methods=['GET'])
+def save_settings():
+    """
+    Save new settings values to memory. Multiple settings can be saved at once.
+    """
+    settings = request.args['settings']
+    
+    memory.save_settings(json.loads(settings))
+    
+    return empty_response 
 
 @app.route('/stop-vis/', methods=['GET'])
 def stop_visualization():
