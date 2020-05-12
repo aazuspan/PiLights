@@ -1,30 +1,43 @@
 import importlib
 import pkgutil
+import pywemo
 import logging
-import neopixel
+
 import os
 import threading
 import time
 
-from backend import constants
 from backend.visualizations.Visualization import Visualization
 
 logging.basicConfig(level=logging.DEBUG)
 
+# Development mode disables Raspberry Pi-specific libraries and functionality
+DEV_MODE = True
+
+if not DEV_MODE:
+    import neopixel
+    from backend import constants
 
 class Controller:
     # Time to wait for visualization threads to read kill_threads and die
     thread_kill_time = 2.5
 
     def __init__(self):
-        self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
-                                        constants.PIXEL_COUNT,
-                                        pixel_order=constants.BRG,
-                                        auto_write=False)
-        self.visualization_categories = self.load_visualizations()
+        if not DEV_MODE:
+            self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
+                                            constants.PIXEL_COUNT,
+                                            pixel_order=constants.BRG,
+                                            auto_write=False)
+            self.visualization_categories = self.load_visualizations()
+
+        else:
+            self.pixels = None
+            self.visualization_categories = {}
+
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
+        self.wemos = pywemo.discover_devices()
     
     @property
     def current_vis_name(self):
@@ -35,6 +48,16 @@ class Controller:
             return self.current_vis.name
         else:
             return None
+    
+    def set_wemo_state(self, mac, state):
+        """
+        Set the power state of a Wemo device based on its mac address
+        :param mac: string Mac address of the Wemo device on the network
+        :param state: bool New power state of the Wemo
+        """
+        for wemo in self.wemos:
+            if wemo.mac == mac:
+                wemo.set_state(state)
     
     def set_brightness(self, value):
         logging.info(f"Setting brightness to {value}")
