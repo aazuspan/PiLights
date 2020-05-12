@@ -21,11 +21,13 @@ class App extends React.Component {
     showWemo: false,
     showSettings: false,
     wemos: [],
+    settings: [],
   }
 
   componentDidMount = () => {
     this.getCategories();
     this.getWemos();
+    this.getSettings();
   }
 
   // Get and set list of categories and current visualization playing
@@ -35,6 +37,16 @@ class App extends React.Component {
         this.setState({
           categoryList: res.data.category_list,
           currentVis: res.data.current_vis,
+        });
+      })
+  }
+
+  // Get a list of all settings and their parameters
+  getSettings = () => {
+    axios.get(settings.SERVER_ADDR + 'load-settings/')
+      .then((res) => {
+        this.setState({
+          settings: res.data.settings,
         });
       })
   }
@@ -168,6 +180,7 @@ class App extends React.Component {
         <SettingsModal
           show={this.state.showSettings}
           toggleSettings={this.toggleSettings}
+          settings={this.state.settings}
         />
 
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />

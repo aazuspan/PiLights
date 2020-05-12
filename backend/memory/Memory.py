@@ -42,3 +42,18 @@ class Memory:
 
         with open(self.memory_file, 'w') as write_file:
             json.dump(memory_data, write_file)
+    
+    def get_settings(self):
+        """
+        Return all settings stored in memory
+        :return : List of dictionaries representing the parameters of each setting
+        """
+        memory_data = self.memory
+        settings = []
+
+        setting_keys = memory_data['settings'].keys()
+
+        for key in setting_keys:
+            settings.append(memory_data['settings'][key])
+        
+        return settings

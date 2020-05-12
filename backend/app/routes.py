@@ -65,6 +65,15 @@ def load_memory():
     return jsonify(response)
 
 
+@app.route('/load-settings/', methods=['GET'])
+def load_settings():
+    """
+    Load and return a list of dictionaries representing each setting in memory
+    """
+    response = {'settings': memory.get_settings()}
+    return jsonify(response)
+
+
 @app.route('/stop-vis/', methods=['GET'])
 def stop_visualization():
     """

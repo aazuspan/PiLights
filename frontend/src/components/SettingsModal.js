@@ -1,10 +1,20 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
 
-import BrightnessSlider from './BrightnessSlider';
-
+import SettingSlider from './SettingSlider';
 
 const SettingsModal = (props) => {
+    let settings = props.settings.map((setting) =>
+        <SettingSlider
+            key={props.settings.indexOf(setting)}
+            label={setting.label}
+            minValue={setting.min_value}
+            maxValue={setting.max_value}
+            incrementValue={setting.increment_value}
+            currentValue={setting.current_value}
+        />
+    )
+
     return (
         <Modal
             size="sm"
@@ -20,7 +30,7 @@ const SettingsModal = (props) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <BrightnessSlider />
+                {settings}
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={props.toggleSettings}>Close</Button>
