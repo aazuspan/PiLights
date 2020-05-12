@@ -1,9 +1,20 @@
 import React from 'react';
-import { Button, Navbar, Nav } from 'react-bootstrap';
+import { Button, NavDropdown, Navbar, Nav } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars, faCaretDown, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
 
 import BrightnessSlider from './BrightnessSlider';
 import TurnOffButton from './TurnOffButton';
 import TurnOnButton from './TurnOnButton';
+
+
+const Icon = (props) => {
+    return (
+        <p>
+            Test
+        </p>
+    )
+}
 
 
 const Header = (props) => {
@@ -13,22 +24,19 @@ const Header = (props) => {
 
     return (
         <Navbar bg="dark" variant="dark" expand="true">
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <NavDropdown id="collasible-nav-dropdown" title={<Button variant="dark"><FontAwesomeIcon icon={faBars} size='lg' /></Button>}>
+                <NavDropdown.Item>Settings</NavDropdown.Item>
+                <NavDropdown.Item onClick={props.toggleWemo}>WEMO™ Control</NavDropdown.Item>
+            </NavDropdown>
+
             <Navbar.Brand href="#home">
                 Game Room
             </Navbar.Brand>
             <Nav className="ml-auto">
                 {powerButton}
             </Nav>
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav>
-                    <BrightnessSlider />
-                </Nav>
-                <Nav>
-                    <Button onClick={props.toggleWemo}>WEMO™ Control</Button>
-                </Nav>
-            </Navbar.Collapse>
-        </Navbar>
+
+        </Navbar >
     )
 }
 

@@ -131,3 +131,12 @@ ul {
     font-size: 15pt;
     padding-left: 10px;
 }
+
+/* Hide the dropdown caret */
+#collasible-nav-dropdown.dropdown-toggle.nav-link::after {
+    display: none;
+}
+
+.dropdown-item {
+    font-size: 20px;
+}
