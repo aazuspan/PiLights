@@ -19,10 +19,12 @@ class App extends React.Component {
     currentVis: null,
     spinnerClass: 'display-none',
     showWemo: false,
+    wemos: [],
   }
 
   componentDidMount = () => {
     this.getCategories();
+    this.getWemos();
   }
 
   // Get and set list of categories and current visualization playing
@@ -32,6 +34,15 @@ class App extends React.Component {
         this.setState({
           categoryList: res.data.category_list,
           currentVis: res.data.current_vis,
+        });
+      })
+  }
+
+  getWemos = () => {
+    axios.get(settings.SERVER_ADDR + 'get-wemos/')
+      .then((res) => {
+        this.setState({
+          wemos: res.data.wemos,
         });
       })
   }
@@ -110,10 +121,26 @@ class App extends React.Component {
     });
   }
 
-  toggleWemo = () => {
+  // Toggle the Wemo control modal
+  toggleWemo = (event) => {
+    // Update the states of all Wemos
+    this.getWemos();
+
     this.setState({
       showWemo: !this.state.showWemo,
     })
+  }
+
+  // Set the power state of a Wemo device based on its MAC address
+  setWemo = (newState, mac) => {
+    axios.get(settings.SERVER_ADDR + "set-wemo/", {
+      params: {
+        state: newState,
+        mac: mac,
+      }
+    }).then(() => {
+      this.getWemos();
+    });
   }
 
   render() {
@@ -134,6 +161,8 @@ class App extends React.Component {
         <WemoModal
           show={this.state.showWemo}
           toggleWemo={this.toggleWemo}
+          setWemo={this.setWemo}
+          wemos={this.state.wemos}
         />
 
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />

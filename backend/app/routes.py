@@ -92,11 +92,10 @@ def get_wemos():
     Get a list of Wemo devices on the network from the Controller.
     :return : JSON response with list of Wemo objects by name, state, and mac address.
     """
-    wemos = controller.wemos
     wemo_list = []
-
-    for device in wemos:
-        wemo = {'name': device.name, 'status': device.get_state(), 'mac': device.mac}
+ 
+    for device in controller.wemos:
+        wemo = {'name': device.name, 'state': bool(device.get_state()), 'mac': device.mac}
         wemo_list.append(wemo)
 
     response = {'wemos': wemo_list}

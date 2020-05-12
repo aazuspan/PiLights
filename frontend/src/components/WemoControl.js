@@ -9,8 +9,10 @@ const WemoControl = (props) => {
             type="switch"
             id={props.label}
             label={props.label}
-            // checked={props.checked}
-            onChange={(event) => { console.log('test') }}
+            checked={props.checked}
+            onChange={(event) => {
+                props.setWemo(+ event.target.checked, props.mac);
+            }}
         />
     )
 }

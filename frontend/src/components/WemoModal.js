@@ -4,6 +4,14 @@ import WemoControl from './WemoControl';
 
 
 const WemoModal = (props) => {
+    let wemos = props.wemos.map((wemo) =>
+        <WemoControl key={props.wemos.indexOf(wemo)} label={wemo.name} checked={wemo.state} setWemo={props.setWemo} mac={wemo.mac} />
+    )
+
+    if (!wemos) {
+        wemos = <p>No WEMO™ devices were found.</p>
+    }
+
     return (
         <Modal
             size="sm"
@@ -19,8 +27,7 @@ const WemoModal = (props) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <WemoControl label="Ceiling Lights" checked={true} />
-                <WemoControl label="Bar Lights" checked={false} />
+                {wemos}
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={props.toggleWemo}>Close</Button>
