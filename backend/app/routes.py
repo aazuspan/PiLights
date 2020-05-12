@@ -1,4 +1,5 @@
 from flask import request, jsonify
+import pywemo
 
 from backend.memory.Memory import Memory
 from backend.Controller import Controller
@@ -85,6 +86,31 @@ def start_visualization():
 
     return empty_response
 
+@app.route('/get-wemos/', methods=['GET'])
+def get_wemos():
+    """
+    Get a list of Wemo devices on the network from the Controller.
+    :return : JSON response with list of Wemo objects by name, state, and mac address.
+    """
+    wemo_list = []
+ 
+    for device in controller.wemos:
+        wemo = {'name': device.name, 'state': bool(device.get_state()), 'mac': device.mac}
+        wemo_list.append(wemo)
+
+    response = {'wemos': wemo_list}
+    return jsonify(response)
+
+@app.route('/set-wemo/', methods=['GET'])
+def set_wemo():
+    """
+    Set the power state of a Wemo device using the Controller
+    """
+    mac = request.args['mac']
+    state = int(request.args['state'])
+    controller.set_wemo_state(mac, state)
+
+    return empty_response
 
 def get_vis_categories_list():
     """

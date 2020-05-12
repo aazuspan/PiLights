@@ -4,6 +4,8 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import * as settings from '../settings';
 
+
+// TODO: Make this a generic setting slider component that label, min, max, step, and save/load methods can be passed to through props
 class BrightnessSlider extends React.Component {
 
     state = {
@@ -29,7 +31,6 @@ class BrightnessSlider extends React.Component {
         })
     }
 
-    // TODO: Have this sets brightness of pixels
     // Send the new brightness value to the backend to save in permanent memory
     saveBrightnessToMemory = () => {
         axios.get(settings.SERVER_ADDR + "set-brightness/", {
@@ -54,9 +55,8 @@ class BrightnessSlider extends React.Component {
         let updateDisabled = this.state.currentBrightness === this.state.savedBrightness;
 
         return (
-            <div className="brightness-slider">
-                <hr />
-                <label htmlFor="brightness" className="light">Brightness</label>
+            <div className="settings-slider">
+                <label htmlFor="brightness">Brightness</label>
                 <input type="range"
                     className="custom-range"
                     id="brightness"

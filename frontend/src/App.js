@@ -1,26 +1,31 @@
 import React from 'react';
 import axios from 'axios';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
+import { Breadcrumb } from 'react-bootstrap';
 
 import Banner from './components/Banner';
 import Header from './components/Header';
 import SpinnerScreen from './components/SpinnerScreen';
 import VisList from './components/VisList';
+import WemoModal from './components/WemoModal';
+import SettingsModal from './components/SettingsModal';
 import * as settings from './settings';
 
 
 class App extends React.Component {
-
   state = {
     visList: [],
     categoryList: [],
     filter: '',
     currentVis: null,
     spinnerClass: 'display-none',
+    showWemo: false,
+    showSettings: false,
+    wemos: [],
   }
 
   componentDidMount = () => {
     this.getCategories();
+    this.getWemos();
   }
 
   // Get and set list of categories and current visualization playing
@@ -30,6 +35,15 @@ class App extends React.Component {
         this.setState({
           categoryList: res.data.category_list,
           currentVis: res.data.current_vis,
+        });
+      })
+  }
+
+  getWemos = () => {
+    axios.get(settings.SERVER_ADDR + "get-wemos/")
+      .then((res) => {
+        this.setState({
+          wemos: res.data.wemos,
         });
       })
   }
@@ -108,39 +122,76 @@ class App extends React.Component {
     });
   }
 
+  // Toggle the Wemo control modal
+  toggleWemo = (event) => {
+    // Update the states of all Wemos
+    this.getWemos();
+
+    this.setState({
+      showWemo: !this.state.showWemo,
+    })
+  }
+
+  // Toggle the Settings modal
+  toggleSettings = (event) => {
+    this.setState({
+      showSettings: !this.state.showSettings,
+    })
+  }
+
+  // Set the power state of a Wemo device based on its MAC address
+  setWemo = (newState, mac) => {
+    axios.get(settings.SERVER_ADDR + "set-wemo/", {
+      params: {
+        state: newState,
+        mac: mac,
+      }
+    }).then(() => {
+      this.getWemos();
+    });
+  }
+
   render() {
-    let bannerContent = this.state.currentVis
-      ? `Playing: ${this.state.currentVis} `
-      : null
-
     let banner = this.state.currentVis
-      ? <Banner content={bannerContent} />
-      : null
-
-    let breadcrumbCategory = this.state.filter
-      ? <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
+      ? <Banner content={`Playing: ${this.state.currentVis} `} />
       : null
 
     return (
       <>
+        <WemoModal
+          show={this.state.showWemo}
+          toggleWemo={this.toggleWemo}
+          setWemo={this.setWemo}
+          wemos={this.state.wemos}
+        />
+
+        <SettingsModal
+          show={this.state.showSettings}
+          toggleSettings={this.toggleSettings}
+        />
+
         <SpinnerScreen spinnerClass={this.state.spinnerClass} />
+
         <Header
           turnOffVis={this.turnOffVis}
           turnOnVis={this.turnOnVis}
+          toggleWemo={this.toggleWemo}
+          toggleSettings={this.toggleSettings}
           currentlyOn={this.state.currentVis !== null}
         />
 
         <Breadcrumb>
           <Breadcrumb.Item onClick={this.clearFilter} active={this.state.filter === ''}>Categories</Breadcrumb.Item>
-          {breadcrumbCategory}
+          <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
         </Breadcrumb>
 
         {banner}
+
         <VisList
           visList={this.state.visList}
           categoryList={this.state.categoryList}
-          startVis={this.startVis}
           filter={this.state.filter}
+          startVis={this.startVis}
           filterVis={this.filterVis} />
       </>
     );
