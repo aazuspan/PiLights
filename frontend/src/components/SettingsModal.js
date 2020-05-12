@@ -23,7 +23,8 @@ const SettingsModal = (props) => {
                 <BrightnessSlider />
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.toggleSettings}>Close</Button>
+                <Button variant="secondary" onClick={props.toggleSettings}>Close</Button>
+                <Button variant="primary" onClick={props.toggleSettings}>Apply</Button>
             </Modal.Footer>
         </Modal>
     );

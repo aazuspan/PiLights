@@ -12,7 +12,6 @@ import * as settings from './settings';
 
 
 class App extends React.Component {
-
   state = {
     visList: [],
     categoryList: [],
@@ -153,16 +152,8 @@ class App extends React.Component {
   }
 
   render() {
-    let bannerContent = this.state.currentVis
-      ? `Playing: ${this.state.currentVis} `
-      : null
-
     let banner = this.state.currentVis
-      ? <Banner content={bannerContent} />
-      : null
-
-    let breadcrumbCategory = this.state.filter
-      ? <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
+      ? <Banner content={`Playing: ${this.state.currentVis} `} />
       : null
 
     return (
@@ -191,15 +182,16 @@ class App extends React.Component {
 
         <Breadcrumb>
           <Breadcrumb.Item onClick={this.clearFilter} active={this.state.filter === ''}>Categories</Breadcrumb.Item>
-          {breadcrumbCategory}
+          <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
         </Breadcrumb>
 
         {banner}
+
         <VisList
           visList={this.state.visList}
           categoryList={this.state.categoryList}
-          startVis={this.startVis}
           filter={this.state.filter}
+          startVis={this.startVis}
           filterVis={this.filterVis} />
       </>
     );

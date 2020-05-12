@@ -1,6 +1,7 @@
 * {
     padding: 0px;
     font-family: 'Baloo Chettan 2', cursive;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 body {
@@ -37,8 +38,8 @@ body {
 }
 
 .navbar-brand {
-    font-family: 'Baloo Chettan 2', cursive;
-    font-size: 30px !important;
+    font-family: 'Alata', sans-serif;
+    font-size: 28px !important;
     margin-left: auto;
     padding: 0px;
 }

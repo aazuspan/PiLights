@@ -31,7 +31,7 @@ const WemoModal = (props) => {
                 {wemos}
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.toggleWemo}>Close</Button>
+                <Button variant="secondary" onClick={props.toggleWemo}>Close</Button>
             </Modal.Footer>
         </Modal>
     );
