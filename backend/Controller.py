@@ -36,7 +36,9 @@ class Controller:
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
+        logging.info('Discovering WEMO devices on network...')
         self.wemos = pywemo.discover_devices()
+        logging.info('{} WEMO devices successfully discovered.'.format(len(self.wemos)))
     
     @property
     def current_vis_name(self):

@@ -31,19 +31,6 @@ def filter_visualizations():
 
     return jsonify(response)
 
-@app.route('/set-brightness/', methods=['GET'])
-def set_brightness():
-    """
-    Set the LED strip brightness
-    """
-    value = request.args['value']
-    controller.set_brightness(value)
-
-    memory.save('brightness', value)
-
-    return empty_response
-
-
 @app.route('/save-memory/', methods=['GET'])
 def save_memory():
     """
@@ -51,7 +38,7 @@ def save_memory():
     """
     attribute = request.args['attribute']
     value = request.args['value']
-    memory.save(attribute, value)
+    memory.save_attribute(attribute, value)
 
     return empty_response
 
@@ -102,7 +89,7 @@ def start_visualization():
     """
     controller.start_vis(request.args['visName'])
 
-    memory.save('last_visualization', request.args['visName'])
+    memory.save_attribute('last_visualization', request.args['visName'])
 
     return empty_response
 
