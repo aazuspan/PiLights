@@ -14,6 +14,10 @@ logging.basicConfig(level=logging.DEBUG)
 # Development mode disables Raspberry Pi-specific libraries and functionality
 DEV_MODE = False
 
+if not DEV_MODE:
+    import neopixel
+    from backend import constants
+
 
 class Controller:
     # Time to wait for visualization threads to read kill_threads and die
@@ -21,8 +25,7 @@ class Controller:
 
     def __init__(self):
         if not DEV_MODE:
-            import neopixel
-            from backend import constants
+
             self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
                                             constants.PIXEL_COUNT,
                                             pixel_order=constants.BRG,

@@ -127,7 +127,7 @@ def rescan_wemos():
     """
     Rescan the network for WEMO devices
     """
-    controller.scan_for_wemos()
+    controller.wemos = controller.scan_for_wemos()
     
     return empty_response
 
