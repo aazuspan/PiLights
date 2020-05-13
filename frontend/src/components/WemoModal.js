@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 
 import WemoControl from './WemoControl';
 
@@ -31,6 +33,7 @@ const WemoModal = (props) => {
                 {wemos}
             </Modal.Body>
             <Modal.Footer>
+                <Button variant="secondary" className="mr-auto" onClick={props.rescanWemos}><FontAwesomeIcon icon={faSyncAlt} size='lg' title="Rescan" /></Button>
                 <Button variant="secondary" onClick={props.toggleWemo}>Close</Button>
             </Modal.Footer>
         </Modal>

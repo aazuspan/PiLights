@@ -14,7 +14,7 @@ const Header = (props) => {
 
     return (
         <Navbar bg="dark" variant="dark" expand="true">
-            <NavDropdown id="collasible-nav-dropdown" title={<Button variant="dark"><FontAwesomeIcon icon={faBars} size='lg' /></Button>}>
+            <NavDropdown id="collasible-nav-dropdown" title={<Button variant="dark"><FontAwesomeIcon icon={faBars} size='lg' title="Options" /></Button>}>
                 <NavDropdown.Item onClick={props.toggleSettings}>Settings</NavDropdown.Item>
                 <NavDropdown.Item onClick={props.toggleWemo}>WEMO™ Control</NavDropdown.Item>
             </NavDropdown>
