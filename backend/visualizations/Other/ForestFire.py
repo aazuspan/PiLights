@@ -9,36 +9,22 @@ class ForestFire(Visualization):
     description = 'Green trees grow and then burn orange.'
 
     initial_density = 0.1
-    
-    fire_temp = {
-        0: (15, 0, 0),
-        200: (20, 5, 0),
-        400: (25, 10, 0),
-        500: (50, 15, 0),
-        700: (75, 20, 0),
-        800: (100, 25, 5),
-        900: (150, 50, 10),
-        1000: (200, 75, 15),
-        1100: (225, 115, 20),
-        1200: (255, 135, 25),
-        1300: (255, 150, 50),
-        1400: (255, 175, 60),
-        1500: (255, 200, 75),
-    }
+    sprout_chance = 0.0001
     
     def __init__(self, pixels):
         super().__init__(pixels)
         self.forest = self.generate_forest()
 
+    #TODO: Add random chance to spawn new trees (sprouting)
     def render(self):
         self.pixels.fill((0, 0, 0))
+        self.chance_to_sprout()
         for cell in self.forest:
             if cell:
                 cell.grow()
                 cell.render()
                 
         self.pixels.show()
-        utils.sleep_ms(0)
         
     def generate_forest(self):
         """
@@ -53,13 +39,43 @@ class ForestFire(Visualization):
             forest.append(cell)
         return forest
 
+    def chance_to_sprout(self):
+        """
+        Chance to sprout a new tree
+        """
+        for i in range(constants.PIXEL_COUNT):
+            if not self.forest[i]:
+                if random.random() < self.sprout_chance:
+                    self.forest[i] = Tree(self, i)
+        
+
 class Tree:
-    seed_viability_rate = 0.1
-    burn_rate = 0.001
+    burn_colors = {
+        0: (150, 255, 0),
+        17: (200, 225, 0),
+        34: (225, 200, 0),
+        51: (255, 150, 0),
+        68: (255, 100, 0),
+        85: (255, 80, 0),
+        102: (255, 60, 0),
+        119: (225, 40, 0),
+        136: (175, 25, 0),
+        153: (125, 20, 0),
+        170: (100, 15, 0),
+        187: (75, 10, 0),
+        204: (35, 5, 0),
+        221: (5, 0, 0),
+        255: (0, 0, 0),
+    }
+    
+    seed_viability_rate = 0.01
+    burn_rate = 0.00002
     reproductive_age = 20
-    max_burn_rounds = 50
+    minimum_burn_age = 100
+    max_burn_rounds = 250
     catch_rounds = 25
-    catch_rate = 0.1
+    catch_rate = 1.1
+    age_rate = 0.2
     
     def __init__(self, forest, index):
         self.forest = forest
@@ -71,9 +87,10 @@ class Tree:
     @property
     def color(self):
         if not self.burning:
-            color = utils.floatcolor2intcolor((0, min(255, self.age), 0))
+            color = utils.floatcolor2intcolor((0, min(255, self.age), min(40, int(self.age/6))))
         else:
-            color = (255, 150, 0)
+            interp_bounds = utils.get_interpolation_bounds(self.burn_colors, self.burn_rounds)
+            color = utils.interpolate_color(interp_bounds[0], interp_bounds[1], interp_bounds[2])
             
         return color
     
@@ -83,7 +100,7 @@ class Tree:
             
         else:
             self.chance_to_burn()
-            self.age += 1
+            self.age += self.age_rate
             if self.age > self.reproductive_age:
                 self.release_seeds()
     
@@ -100,9 +117,10 @@ class Tree:
             pass
     
     def chance_to_burn(self):
-        if random.random() < self.burn_rate:
-            self.burning = True
-            self.burn()
+        if self.age > self.minimum_burn_age:
+            if random.random() < self.burn_rate:
+                self.burning = True
+                self.burn()
     
     def burn(self):
         if self.burn_rounds >= self.max_burn_rounds:
@@ -113,7 +131,6 @@ class Tree:
                 self.catch_neighbours()
 
         self.burn_rounds += 1
-            
     
     def catch_neighbours(self):
         for offset in [-1, 1]:
@@ -126,3 +143,4 @@ class Tree:
                 
     def die(self):
         self.forest.forest[self.index] = None
+        
