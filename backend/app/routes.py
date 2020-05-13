@@ -1,4 +1,6 @@
 from flask import request, jsonify
+import json
+import pywemo
 
 from backend.memory.Memory import Memory
 from backend.Controller import Controller
@@ -29,19 +31,6 @@ def filter_visualizations():
 
     return jsonify(response)
 
-@app.route('/set-brightness/', methods=['GET'])
-def set_brightness():
-    """
-    Set the LED strip brightness
-    """
-    value = request.args['value']
-    controller.set_brightness(value)
-
-    memory.save('brightness', value)
-
-    return empty_response
-
-
 @app.route('/save-memory/', methods=['GET'])
 def save_memory():
     """
@@ -49,7 +38,7 @@ def save_memory():
     """
     attribute = request.args['attribute']
     value = request.args['value']
-    memory.save(attribute, value)
+    memory.save_attribute(attribute, value)
 
     return empty_response
 
@@ -63,6 +52,28 @@ def load_memory():
     response = {'value': memory.load(attribute)}
     return jsonify(response)
 
+
+@app.route('/load-settings/', methods=['GET'])
+def load_settings():
+    """
+    Load and return a list of dictionaries representing each setting in memory
+    """
+    response = {'settings': memory.get_settings()}
+    return jsonify(response)
+
+@app.route('/save-settings/', methods=['GET'])
+def save_settings():
+    """
+    Save new settings values to memory. Multiple settings can be saved at once.
+    """
+    settings = json.loads(request.args['settings'])
+
+    if "Brightness" in settings.keys():
+        controller.set_brightness(settings["Brightness"])
+
+    memory.save_settings(settings)
+    
+    return empty_response 
 
 @app.route('/stop-vis/', methods=['GET'])
 def stop_visualization():
@@ -81,10 +92,44 @@ def start_visualization():
     """
     controller.start_vis(request.args['visName'])
 
-    memory.save('last_visualization', request.args['visName'])
+    memory.save_attribute('last_visualization', request.args['visName'])
 
     return empty_response
 
+@app.route('/get-wemos/', methods=['GET'])
+def get_wemos():
+    """
+    Get a list of Wemo devices on the network from the Controller.
+    :return : JSON response with list of Wemo objects by name, state, and mac address.
+    """
+    wemo_list = []
+ 
+    for device in controller.wemos:
+        wemo = {'name': device.name, 'state': bool(device.get_state()), 'mac': device.mac}
+        wemo_list.append(wemo)
+
+    response = {'wemos': wemo_list}
+    return jsonify(response)
+
+@app.route('/set-wemo/', methods=['GET'])
+def set_wemo():
+    """
+    Set the power state of a Wemo device using the Controller
+    """
+    mac = request.args['mac']
+    state = int(request.args['state'])
+    controller.set_wemo_state(mac, state)
+
+    return empty_response
+
+@app.route('/rescan-wemos/', methods=['GET'])
+def rescan_wemos():
+    """
+    Rescan the network for WEMO devices
+    """
+    controller.scan_for_wemos()
+    
+    return empty_response
 
 def get_vis_categories_list():
     """

@@ -1,6 +1,7 @@
 * {
     padding: 0px;
     font-family: 'Baloo Chettan 2', cursive;
+    font-family: 'Josefin Sans', sans-serif;
 }
 
 body {
@@ -21,7 +22,7 @@ body {
     right: 0;
     bottom: 0;
     text-align: center;
-    z-index: 99;
+    z-index: 9999;
 }
 
 .spinner-screen .spinner-border {
@@ -37,8 +38,8 @@ body {
 }
 
 .navbar-brand {
-    font-family: 'Baloo Chettan 2', cursive;
-    font-size: 30px !important;
+    font-family: 'Alata', sans-serif;
+    font-size: 28px !important;
     margin-left: auto;
     padding: 0px;
 }
@@ -58,10 +59,11 @@ body {
 
 .banner {
     padding: 4px;
-    background-color: rgba(0, 162, 255, 0.6);
+    background-color: rgb(255, 255, 255);
+    color: rgba(0, 0, 0, 1);
     font-size: 20px;
     font-style: italic;
-    color: rgba(255, 255, 255, 0.8);
+
     text-align: center;
     box-sizing: border-box;
 }
@@ -70,11 +72,12 @@ ul {
     list-style-type: none;
 }
 
-.brightness-slider {
-    color: white;
+.settings-slider {
+    color: black;
+    font-size: 14pt;
 }
 
-.brightness-slider label {
+.settings-slider label {
     margin: 0px;
 }
 
@@ -103,4 +106,40 @@ ul {
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0.5);
     margin: 0;
+}
+
+.custom-control.custom-switch {
+    margin-top: 10px;
+}
+
+.custom-switch .custom-control-label::before {
+    height: 1.25em;
+    width: 1.9em;
+    border-radius: 1em;
+    position: absolute;
+    top: 50%;
+    transform: translate(0%,-50%);
+}
+
+.custom-switch .custom-control-label::after {
+    top: 18%;
+    height: 1em;
+    left: calc(-1.75em + 2px);
+    width: 1em;
+    border-radius: 1em;
+    transform: ()
+}
+
+.custom-control-label {
+    font-size: 15pt;
+    padding-left: 10px;
+}
+
+/* Hide the dropdown caret */
+#collasible-nav-dropdown.dropdown-toggle.nav-link::after {
+    display: none;
+}
+
+.dropdown-item {
+    font-size: 20px;
 }
