@@ -11,7 +11,7 @@ const WemoModal = (props) => {
         <WemoControl key={props.wemos.indexOf(wemo)} label={wemo.name} checked={wemo.state} setWemo={props.setWemo} mac={wemo.mac} />
     )
 
-    if (!wemos) {
+    if (wemos.length === 0) {
         wemos = <p>No WEMO™ devices were found.</p>
     }
 

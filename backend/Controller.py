@@ -57,9 +57,17 @@ class Controller:
         Scan the network for WEMO devices and return them
         :return : A list of WEMO devices
         """
+        wemos = []
+        
         logging.info('Discovering WEMO devices on network...')
-        wemos = pywemo.discover_devices()
-        logging.info('{} WEMO devices successfully discovered.'.format(len(wemos)))
+        try:
+            wemos = pywemo.discover_devices()
+            logging.info('{} WEMO devices successfully discovered.'.format(len(wemos)))
+
+        except Exception as e:
+            logging.exception(("An error occurred while scanning for WEMO devices. If any"
+            " WEMO names were changed, try unplugging and replugging the WEMO, and then"
+            " restarting this program."))
 
         return wemos
 
