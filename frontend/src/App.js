@@ -153,6 +153,16 @@ class App extends React.Component {
     })
   }
 
+  // Tell the API to rescan for WEMO devices
+  rescanWemos = () => {
+    this.showSpinner();
+    axios.get(settings.SERVER_ADDR + "rescan-wemos/")
+      .then(() => {
+        this.getWemos();
+        this.hideSpinner();
+      });
+  }
+
   // Set the power state of a Wemo device based on its MAC address
   setWemo = (newState, mac) => {
     axios.get(settings.SERVER_ADDR + "set-wemo/", {
@@ -172,11 +182,14 @@ class App extends React.Component {
 
     return (
       <>
+        <SpinnerScreen spinnerClass={this.state.spinnerClass} />
+
         <WemoModal
           show={this.state.showWemo}
           toggleWemo={this.toggleWemo}
           setWemo={this.setWemo}
           wemos={this.state.wemos}
+          rescanWemos={this.rescanWemos}
         />
 
         <SettingsModal
@@ -185,8 +198,6 @@ class App extends React.Component {
           settings={this.state.settings}
           getSettings={this.getSettings}
         />
-
-        <SpinnerScreen spinnerClass={this.state.spinnerClass} />
 
         <Header
           turnOffVis={this.turnOffVis}
