@@ -122,6 +122,15 @@ def set_wemo():
 
     return empty_response
 
+@app.route('/rescan-wemos/', methods=['GET'])
+def rescan_wemos():
+    """
+    Rescan the network for WEMO devices
+    """
+    controller.scan_for_wemos()
+    
+    return empty_response
+
 def get_vis_categories_list():
     """
     Get a list of all visualization categories from the Controller
