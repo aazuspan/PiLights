@@ -210,10 +210,6 @@ class App extends React.Component {
   }
 
   render() {
-    let banner = this.state.currentVis
-      ? <Banner content={`Playing: ${this.state.currentVis} `} />
-      : null
-
     return (
       <>
         <SpinnerScreen show={this.state.showSpinner} />
@@ -250,7 +246,7 @@ class App extends React.Component {
           <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
         </Breadcrumb>
 
-        {banner}
+        <Banner currentVis={this.state.currentVis} />
 
         <VisList
           visList={this.state.visList}
