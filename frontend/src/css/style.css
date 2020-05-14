@@ -8,10 +8,6 @@ body {
     background-color: rgb(46, 46, 46);
 }
 
-.display-none {
-    display: none;
-}
-
 .spinner-screen {
     position: fixed;
     width: 100%;

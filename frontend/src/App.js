@@ -18,7 +18,7 @@ class App extends React.Component {
     filter: '',
     currentVis: null,
     on: false,
-    spinnerClass: 'display-none',
+    showSpinner: false,
     showWemo: false,
     showSettings: false,
     switchedWemo: null,
@@ -125,13 +125,13 @@ class App extends React.Component {
 
   hideSpinner = () => {
     this.setState({
-      spinnerClass: 'display-none',
+      showSpinner: false,
     })
   }
 
   showSpinner = () => {
     this.setState({
-      spinnerClass: null,
+      showSpinner: true,
     })
   }
 
@@ -216,7 +216,7 @@ class App extends React.Component {
 
     return (
       <>
-        <SpinnerScreen spinnerClass={this.state.spinnerClass} />
+        <SpinnerScreen show={this.state.showSpinner} />
 
         <WemoModal
           show={this.state.showWemo}
