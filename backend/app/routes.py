@@ -113,8 +113,6 @@ def start_visualization():
     """
     controller.start_vis(request.args['visName'])
 
-    memory.save_attribute('last_visualization', request.args['visName'])
-
     return empty_response
 
 @app.route('/stop-vis/', methods=['GET'])
@@ -123,7 +121,7 @@ def stop_visualization():
     Stop running visualizations
     """
     controller.stop_render()
-    
+
     return empty_response
 
 @app.route('/get-wemos/', methods=['GET'])
