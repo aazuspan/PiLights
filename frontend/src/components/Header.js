@@ -8,9 +8,15 @@ import TurnOnButton from './TurnOnButton';
 
 
 const Header = (props) => {
-    let powerButton = props.currentlyOn
-        ? <TurnOffButton turnOffVis={props.turnOffVis} />
-        : <TurnOnButton turnOnVis={props.turnOnVis} />
+    let powerButton = null;
+
+    try {
+        powerButton = props.currentlyOn
+            ? <TurnOffButton turnOffVis={props.turnOff} visibility={props.switchedWemo.mac ? "visible" : "hidden"} />
+            : <TurnOnButton turnOn={props.turnOn} visibility={props.switchedWemo.mac ? "visible" : "hidden"} />
+    }
+    catch (e) {
+    }
 
     return (
         <Navbar bg="dark" variant="dark" expand="true">

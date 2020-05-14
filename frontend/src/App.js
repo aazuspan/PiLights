@@ -17,9 +17,11 @@ class App extends React.Component {
     categoryList: [],
     filter: '',
     currentVis: null,
+    on: false,
     spinnerClass: 'display-none',
     showWemo: false,
     showSettings: false,
+    switchedWemo: null,
     wemos: [],
     settings: [],
   }
@@ -28,6 +30,18 @@ class App extends React.Component {
     this.getCategories();
     this.getWemos();
     this.getSettings();
+    this.getStatus();
+  }
+
+  getStatus = () => {
+    axios.get(settings.SERVER_ADDR + 'get-status/')
+      .then((res) => {
+        this.setState({
+          on: res.data.on,
+          currentVis: res.data.current_vis,
+          switchedWemo: res.data.switched_wemo,
+        });
+      })
   }
 
   // Get and set list of categories and current visualization playing
@@ -51,15 +65,6 @@ class App extends React.Component {
       })
   }
 
-  getWemos = () => {
-    axios.get(settings.SERVER_ADDR + "get-wemos/")
-      .then((res) => {
-        this.setState({
-          wemos: res.data.wemos,
-        });
-      })
-  }
-
   // Start rendering a specific visualization
   startVis = (visName) => {
     this.showSpinner();
@@ -77,16 +82,35 @@ class App extends React.Component {
       })
   }
 
-  // Turn off all visualizations
-  turnOffVis = () => {
+  // Pass all updated settings to the API to be saved into memory
+  saveSettings = (updatedSettings) => {
+    axios.get(settings.SERVER_ADDR + "save-settings/", {
+      params: {
+        settings: JSON.stringify(updatedSettings),
+      }
+    }).then(
+      // A delay is required between writing to settings and reading from settings
+      setTimeout(this.getStatus, 100)
+    );
+  }
+
+  // Turns on the switch WEMO, if one is set
+  turnOn = () => {
+    axios.get(settings.SERVER_ADDR + "turn-on/")
+      .then(() => { this.getStatus() });
+  }
+
+  // Turns off the WEMO, if one is set, and all visualizations
+  turnOff = () => {
     this.showSpinner();
 
-    axios.get(settings.SERVER_ADDR + "stop-vis/")
+    axios.get(settings.SERVER_ADDR + "turn-off/")
       .then(() => {
         this.setState({
           currentVis: null,
         });
         this.hideSpinner();
+        this.getStatus();
       })
   }
 
@@ -99,17 +123,6 @@ class App extends React.Component {
   showSpinner = () => {
     this.setState({
       spinnerClass: null,
-    })
-  }
-
-  // Turns on the last played visualization
-  turnOnVis = () => {
-    axios.get(settings.SERVER_ADDR + "load-memory/", {
-      params: {
-        attribute: 'last_visualization',
-      }
-    }).then((res) => {
-      this.startVis(res.data.value);
     })
   }
 
@@ -132,6 +145,16 @@ class App extends React.Component {
     this.setState({
       filter: '',
     });
+  }
+
+  // Get the list of wemo devices, including names and mac addressed, from the API
+  getWemos = () => {
+    axios.get(settings.SERVER_ADDR + "get-wemos/")
+      .then((res) => {
+        this.setState({
+          wemos: res.data.wemos,
+        });
+      })
   }
 
   // Toggle the Wemo control modal
@@ -159,6 +182,7 @@ class App extends React.Component {
     axios.get(settings.SERVER_ADDR + "rescan-wemos/")
       .then(() => {
         this.getWemos();
+        this.getStatus();
         this.hideSpinner();
       });
   }
@@ -172,6 +196,7 @@ class App extends React.Component {
       }
     }).then(() => {
       this.getWemos();
+      this.getStatus();
     });
   }
 
@@ -198,14 +223,17 @@ class App extends React.Component {
           settings={this.state.settings}
           getSettings={this.getSettings}
           wemos={this.state.wemos}
+          switchedWemo={this.state.switchedWemo}
+          saveSettings={this.saveSettings}
         />
 
         <Header
-          turnOffVis={this.turnOffVis}
-          turnOnVis={this.turnOnVis}
+          turnOff={this.turnOff}
+          turnOn={this.turnOn}
           toggleWemo={this.toggleWemo}
           toggleSettings={this.toggleSettings}
-          currentlyOn={this.state.currentVis !== null}
+          currentlyOn={this.state.on}
+          switchedWemo={this.state.switchedWemo}
         />
 
         <Breadcrumb>

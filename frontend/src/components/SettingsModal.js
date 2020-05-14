@@ -1,21 +1,10 @@
 import React from 'react';
-import axios from 'axios';
 import { Button, Form, Modal } from 'react-bootstrap';
 
 import SettingSlider from './SettingSlider';
-import * as settings from '../settings';
 
 
 class SettingsModal extends React.Component {
-    // Pass all updated settings to the API to be saved into memory
-    applySettings = () => {
-        axios.get(settings.SERVER_ADDR + "save-settings/", {
-            params: {
-                settings: JSON.stringify(this.settings),
-            }
-        })
-    }
-
     componentDidMount = () => {
         // Store a temporary list of updated setting values
         this.settings = {};
@@ -93,7 +82,7 @@ class SettingsModal extends React.Component {
                 <Modal.Body>
                     {this.settingsSliders}
                     <Form.Group controlId="powerWemo" title='Select a WEMO for automatic power control.'>
-                        <Form.Label>Switch WEMO™</Form.Label>
+                        <Form.Label>Switched WEMO™</Form.Label>
                         <Form.Control as="select" onChange={this.handleSelectChange} defaultValue={this.getSwitchWemoName()}>
                             <option>None</option>
                             {this.wemoOptions}
@@ -102,7 +91,7 @@ class SettingsModal extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.props.toggleSettings}>Close</Button>
-                    <Button variant="primary" onClick={this.applySettings}>Apply</Button>
+                    <Button variant="primary" onClick={() => { this.props.saveSettings(this.settings) }}>Apply</Button>
                 </Modal.Footer>
             </Modal>
         );

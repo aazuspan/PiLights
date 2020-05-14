@@ -8,6 +8,7 @@ import threading
 import time
 
 from backend.visualizations.Visualization import Visualization
+from backend.memory.Memory import Memory
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -39,8 +40,9 @@ class Controller:
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
+        self.memory = Memory()
         self.wemos = self.scan_for_wemos()
-        
+        self.on = False
     
     @property
     def current_vis_name(self):
@@ -51,35 +53,6 @@ class Controller:
             return self.current_vis.name
         else:
             return None
-    
-    def scan_for_wemos(self):
-        """
-        Scan the network for WEMO devices and return them
-        :return : A list of WEMO devices
-        """
-        wemos = []
-        
-        logging.info('Discovering WEMO devices on network...')
-        try:
-            wemos = pywemo.discover_devices()
-            logging.info('{} WEMO devices successfully discovered.'.format(len(wemos)))
-
-        except Exception as e:
-            logging.exception(("An error occurred while scanning for WEMO devices. If any"
-            " WEMO names were changed, try unplugging and replugging the WEMO, and then"
-            " restarting this program."))
-
-        return wemos
-
-    def set_wemo_state(self, mac, state):
-        """
-        Set the power state of a Wemo device based on its mac address
-        :param mac: string Mac address of the Wemo device on the network
-        :param state: bool New power state of the Wemo
-        """
-        for wemo in self.wemos:
-            if wemo.mac == mac:
-                wemo.set_state(state)
     
     def set_brightness(self, value):
         logging.info(f"Setting brightness to {value}")
@@ -175,6 +148,18 @@ class Controller:
 
         self.thread_running = False
 
+    def turn_off(self):
+        """
+        Turn off the visualization. This is triggered by the off button, not by switching visualizations.
+        """
+        self.stop_render()
+        self.set_switched_wemo_state(False)
+
+    def turn_on(self):
+        """
+        Turn on the switched WEMO, if one is set
+        """
+        self.set_switched_wemo_state(True)
 
     def start_vis(self, name):
         """
@@ -184,15 +169,81 @@ class Controller:
         :param name: str name of visualization to run
         """
 
-        vis_class = self.get_vis_by_name(name)
+        # vis_class = self.get_vis_by_name(name)
         
-        if self.thread_running:
-            self.stop_render()
+        # if self.thread_running:
+        #     self.stop_render()
             
-        logging.info(f"Starting {name}")
-        self.current_vis = vis_class(pixels=self.pixels)
-        vis_thread = threading.Thread(target=self.run_vis)
-        vis_thread.start()
+        # logging.info(f"Starting {name}")
+        # self.current_vis = vis_class(pixels=self.pixels)
+        # vis_thread = threading.Thread(target=self.run_vis)
+        # vis_thread.start()
+        
+        self.set_switched_wemo_state(True)
+
+    def scan_for_wemos(self):
+        """
+        Scan the network for WEMO devices and return them
+        :return : A list of WEMO devices
+        """
+        wemos = []
+        
+        logging.info('Discovering WEMO devices on network...')
+        try:
+            wemos = pywemo.discover_devices()
+            logging.info('{} WEMO devices successfully discovered.'.format(len(wemos)))
+
+        except Exception as e:
+            logging.exception(("An error occurred while scanning for WEMO devices. If any"
+            " WEMO names were changed, try unplugging and replugging the WEMO, and then"
+            " restarting this program."))
+
+        return wemos
+
+    def get_wemo_by_mac(self, mac):
+        """
+        Get the Wemo device based on its mac address
+        :param mac: string Mac address of the Wemo device on the network
+        :param state: pywemo.Switch wemo device
+        """
+        for wemo in self.wemos:
+            if wemo.mac == mac:
+                return wemo
+        return None
+
+    def set_wemo_state(self, mac, state):
+        """
+        Set the power state of a Wemo device based on its mac address
+        :param mac: string Mac address of the Wemo device on the network
+        :param state: bool New power state of the Wemo
+        """
+        self.get_wemo_by_mac(mac).set_state(state)
+
+    def get_switched_wemo(self):
+        """
+        If a switched WEMO is set in settings, return a dictionary of the WEMOs label and mac address. If not, return None
+        """
+        switch_wemo = self.memory.load_setting('switch_wemo')
+        return switch_wemo['current_value']
+
+    def set_switched_wemo_state(self, state):
+        """
+        Set the power state of the switched WEMO, if one is set in settings
+        :param state: bool power state to set WEMO device to
+        """
+        switched_wemo = self.get_switched_wemo()
+        if switched_wemo:
+            self.set_wemo_state(switched_wemo['mac'], state)
+
+    def get_switched_wemo_state(self):
+        """
+        If a switched WEMO is set in settings, return its current power state. If not, return 1
+        """
+        switched_wemo = self.get_switched_wemo()
+        if switched_wemo['mac']:
+            device = self.get_wemo_by_mac(switched_wemo['mac'])
+            return device.get_state()
+        return 1
 
     def run_vis(self):
         """
