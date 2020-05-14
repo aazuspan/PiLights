@@ -197,6 +197,7 @@ class App extends React.Component {
           toggleSettings={this.toggleSettings}
           settings={this.state.settings}
           getSettings={this.getSettings}
+          wemos={this.state.wemos}
         />
 
         <Header

@@ -12,7 +12,7 @@ from backend.visualizations.Visualization import Visualization
 logging.basicConfig(level=logging.DEBUG)
 
 # Development mode disables Raspberry Pi-specific libraries and functionality
-DEV_MODE = False
+DEV_MODE = True
 
 if not DEV_MODE:
     import neopixel

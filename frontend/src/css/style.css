@@ -72,12 +72,11 @@ ul {
     list-style-type: none;
 }
 
-.settings-slider {
-    color: black;
+.modal-body, .modal-body select {
     font-size: 14pt;
 }
 
-.settings-slider label {
+.modal-body label {
     margin: 0px;
 }
 
