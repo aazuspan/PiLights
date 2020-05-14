@@ -17,7 +17,6 @@ def index():
     """
     response = {}
     response['category_list'] = get_vis_categories_list()
-    response['current_vis'] = controller.current_vis_name
 
     return jsonify(response)
 
@@ -28,8 +27,8 @@ def status():
     """
     response = {}
     response['on'] = controller.get_switched_wemo_state()
-    response['current_vis'] = controller.current_vis_name
     response['switched_wemo'] = controller.get_switched_wemo()
+    response['current_vis'] = controller.get_current_vis()
 
     return jsonify(response)
 

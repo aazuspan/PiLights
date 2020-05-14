@@ -75,10 +75,11 @@ class App extends React.Component {
       }
     })
       .then(() => {
-        this.setState({
-          currentVis: visName,
-        });
+        // this.setState({
+        //   currentVis: visName,
+        // });
         this.hideSpinner();
+        this.getStatus();
       })
   }
 

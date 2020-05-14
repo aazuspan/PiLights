@@ -2,22 +2,18 @@ import importlib
 import pkgutil
 import pywemo
 import logging
-
 import os
 import threading
 import time
 
 from backend.visualizations.Visualization import Visualization
 from backend.memory.Memory import Memory
+from backend import constants
+
+if not constants.DEV_MODE:
+    import neopixel
 
 logging.basicConfig(level=logging.DEBUG)
-
-# Development mode disables Raspberry Pi-specific libraries and functionality
-DEV_MODE = True
-
-if not DEV_MODE:
-    import neopixel
-    from backend import constants
 
 
 class Controller:
@@ -25,8 +21,7 @@ class Controller:
     thread_kill_time = 2.5
 
     def __init__(self):
-        if not DEV_MODE:
-
+        if not constants.DEV_MODE:
             self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
                                             constants.PIXEL_COUNT,
                                             pixel_order=constants.BRG,
@@ -37,23 +32,23 @@ class Controller:
             self.pixels = None
             self.visualization_categories = {}
 
+        self.visualization_categories = self.load_visualizations()
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
         self.memory = Memory()
         self.wemos = self.scan_for_wemos()
+        self.wemos = []
         self.on = False
     
-    @property
-    def current_vis_name(self):
+    def get_current_vis(self):
         """
-        Return the name of the current visualization if one is playing
+        If a visualization is playing, return a dictionary with its name and category
         """
         if self.current_vis:
-            return self.current_vis.name
-        else:
-            return None
-    
+            return {'name': self.current_vis.name, 'category': self.current_vis.category}
+        return None
+
     def set_brightness(self, value):
         logging.info(f"Setting brightness to {value}")
         self.pixels.brightness = int(value)/255
@@ -168,15 +163,15 @@ class Controller:
         :param name: str name of visualization to run
         """
 
-        # vis_class = self.get_vis_by_name(name)
+        vis_class = self.get_vis_by_name(name)
         
-        # if self.thread_running:
-        #     self.stop_render()
+        if self.thread_running:
+            self.stop_render()
             
-        # logging.info(f"Starting {name}")
-        # self.current_vis = vis_class(pixels=self.pixels)
-        # vis_thread = threading.Thread(target=self.run_vis)
-        # vis_thread.start()
+        logging.info(f"Starting {name}")
+        self.current_vis = vis_class(pixels=self.pixels)
+        vis_thread = threading.Thread(target=self.run_vis)
+        vis_thread.start()
         
         self.set_switched_wemo_state(True)
 
@@ -216,7 +211,10 @@ class Controller:
         :param mac: string Mac address of the Wemo device on the network
         :param state: bool New power state of the Wemo
         """
-        self.get_wemo_by_mac(mac).set_state(state)
+        device = self.get_wemo_by_mac(mac)
+        
+        if device:
+            device.set_state(state)
 
     def get_switched_wemo(self):
         """
@@ -241,7 +239,8 @@ class Controller:
         switched_wemo = self.get_switched_wemo()
         if switched_wemo['mac']:
             device = self.get_wemo_by_mac(switched_wemo['mac'])
-            return device.get_state()
+            if device:
+                return device.get_state()
         return 1
 
     def run_vis(self):
@@ -251,6 +250,9 @@ class Controller:
         self.kill_threads = False
         self.thread_running = True
 
+        if constants.DEV_MODE:
+            return
+            
         while not self.kill_threads:
             self.current_vis.render()
             
