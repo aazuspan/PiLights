@@ -82,6 +82,19 @@ class App extends React.Component {
       })
   }
 
+  // Turn off visualizations
+  stopVis = () => {
+    this.showSpinner();
+
+    axios.get(settings.SERVER_ADDR + "stop-vis/")
+      .then(() => {
+        this.setState({
+          currentVis: null,
+        });
+        this.hideSpinner();
+      })
+  }
+
   // Pass all updated settings to the API to be saved into memory
   saveSettings = (updatedSettings) => {
     axios.get(settings.SERVER_ADDR + "save-settings/", {
@@ -94,24 +107,20 @@ class App extends React.Component {
     );
   }
 
-  // Turns on the switch WEMO, if one is set
+  // Turns on the switched WEMO
   turnOn = () => {
     axios.get(settings.SERVER_ADDR + "turn-on/")
-      .then(() => { this.getStatus() });
+      .then(() => {
+        this.getStatus();
+      });
   }
 
-  // Turns off the WEMO, if one is set, and all visualizations
+  // Turns off the switched WEMO
   turnOff = () => {
-    this.showSpinner();
-
     axios.get(settings.SERVER_ADDR + "turn-off/")
       .then(() => {
-        this.setState({
-          currentVis: null,
-        });
-        this.hideSpinner();
         this.getStatus();
-      })
+      });
   }
 
   hideSpinner = () => {

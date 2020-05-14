@@ -150,10 +150,9 @@ class Controller:
 
     def turn_off(self):
         """
-        Turn off the visualization. This is triggered by the off button, not by switching visualizations.
+        Turn off the switched wemo.
         """
-        self.stop_render()
-        self.set_switched_wemo_state(False)
+        self.set_switched_wemo_state(False)        
 
     def turn_on(self):
         """
