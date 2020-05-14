@@ -10,38 +10,7 @@ class SettingsModal extends React.Component {
         this.settings = {};
     }
 
-    // Update the value of a setting with a given label
-    updateSetting = (label, value) => {
-        this.settings[label] = value;
-    }
-
-    // Handle changes to the WEMO select form
-    handleSelectChange = (event) => {
-        let option = event.target.childNodes[event.target.selectedIndex];
-        let currentValue = { mac: option.getAttribute('mac'), label: option.value };
-        this.updateSetting('switch_wemo', currentValue);
-    }
-
-    // Get a setting object with a given label
-    getSettingByLabel = (label) => {
-        for (let i = 0; i < this.props.settings.length; i++) {
-            if (this.props.settings[i].label === label) {
-                return this.props.settings[i];
-            }
-        }
-        return null;
-    }
-
-    // Get the currentvalue of the Switch Wemo setting 
-    getSwitchWemoName = () => {
-        let switchWemoSetting = this.getSettingByLabel('Switch WEMO');
-        if (switchWemoSetting) {
-            return switchWemoSetting.current_value.label;
-        }
-        return "";
-    }
-
-    render = () => {
+    componentDidUpdate = () => {
         this.settingsSliders = this.props.settings.map((setting) =>
             setting.type === "slider" ?
                 <SettingSlider
@@ -64,7 +33,21 @@ class SettingsModal extends React.Component {
                 {wemo.name}
             </option>
         );
+    }
 
+    // Update the value of a setting with a given label
+    updateSetting = (label, value) => {
+        this.settings[label] = value;
+    }
+
+    // Handle changes to the switched WEMO select form
+    handleSelectChange = (event) => {
+        let option = event.target.childNodes[event.target.selectedIndex];
+        let currentValue = { mac: option.getAttribute('mac'), label: option.value };
+        this.updateSetting('switch_wemo', currentValue);
+    }
+
+    render = () => {
         return (
             <Modal
                 size="sm"
@@ -83,7 +66,7 @@ class SettingsModal extends React.Component {
                     {this.settingsSliders}
                     <Form.Group controlId="powerWemo" title='Select a WEMO for automatic power control.'>
                         <Form.Label>Switched WEMO™</Form.Label>
-                        <Form.Control as="select" onChange={this.handleSelectChange} defaultValue={this.getSwitchWemoName()}>
+                        <Form.Control as="select" onChange={this.handleSelectChange} defaultValue={this.props.switchedWemo ? this.props.switchedWemo.label : "None"}>
                             <option>None</option>
                             {this.wemoOptions}
                         </Form.Control>
