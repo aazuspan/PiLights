@@ -36,7 +36,7 @@ class Memory:
         
         return memory_data
 
-    def load(self, attribute):
+    def load_attribute(self, attribute):
         """
         Load the value of an attribute stored in memory
         :param attribute : str name of memory attribute to load value for
@@ -67,12 +67,27 @@ class Memory:
 
         with open(self.memory_file, 'w') as write_file:
             json.dump(memory_data, write_file)
-    
+
+    def load_setting(self, setting):
+        """
+        Load the value of a setting stored in memory
+        :param setting : str name of memory setting to load value for
+        :return : str/int/float value stored in memory for the requested setting
+        """
+        value = None
+
+        memory_data = self.memory
+        
+        if setting in memory_data['settings']:
+            value = memory_data['settings'][setting]
+
+        return value
+
     def save_setting(self, setting, value):
         """
         Save a new setting value in memory. Can be used with an existing setting.
-        :param setting : str name of memory attribute to save value for
-        :param value: str value to save for that attribute
+        :param setting : str name of memory setting to save value for
+        :param value: str value to save for that setting
         """
         memory_data = self.memory
 

@@ -8,12 +8,18 @@ import TurnOnButton from './TurnOnButton';
 
 
 const Header = (props) => {
-    let powerButton = props.currentlyOn
-        ? <TurnOffButton turnOffVis={props.turnOffVis} />
-        : <TurnOnButton turnOnVis={props.turnOnVis} />
+    let powerButton = null;
+
+    try {
+        powerButton = props.currentlyOn
+            ? <TurnOffButton turnOffVis={props.turnOff} visibility={props.switchedWemo.mac ? "visible" : "hidden"} />
+            : <TurnOnButton turnOn={props.turnOn} visibility={props.switchedWemo.mac ? "visible" : "hidden"} />
+    }
+    catch (e) {
+    }
 
     return (
-        <Navbar bg="dark" variant="dark" expand="true">
+        <Navbar fixed="top" bg="dark" variant="dark">
             <NavDropdown id="collasible-nav-dropdown" title={<Button variant="dark"><FontAwesomeIcon icon={faBars} size='lg' title="Options" /></Button>}>
                 <NavDropdown.Item onClick={props.toggleSettings}>Settings</NavDropdown.Item>
                 <NavDropdown.Item onClick={props.toggleWemo}>WEMO™ Control</NavDropdown.Item>

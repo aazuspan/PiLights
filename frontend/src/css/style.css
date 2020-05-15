@@ -8,10 +8,6 @@ body {
     background-color: rgb(46, 46, 46);
 }
 
-.display-none {
-    display: none;
-}
-
 .spinner-screen {
     position: fixed;
     width: 100%;
@@ -58,31 +54,63 @@ body {
 }
 
 .banner {
-    padding: 4px;
-    background-color: rgb(255, 255, 255);
-    color: rgba(0, 0, 0, 1);
-    font-size: 20px;
-    font-style: italic;
+    padding: 10px;
 
-    text-align: center;
-    box-sizing: border-box;
+    background-color: rgba(10, 10, 10, 0.9);
+    color: white;
+
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    height: 60px;
+    transition: 1s;
 }
+
+.banner-hidden {
+    transform: translateY(60px);
+    transition: 1s;
+}
+
+.banner .contents {
+    display: inline-block;
+    width: 70%;
+}
+
+.banner .title, .banner .category {
+    display: block;
+    line-height: 22px;
+    margin-left: 12px;
+}
+
+.banner .title {
+    font-size: 22px;
+}
+
+.banner .category {
+    font-size: 16px;
+    font-style: italic;
+    text-transform: lowercase;
+}
+
 
 ul {
     list-style-type: none;
 }
 
-.settings-slider {
-    color: black;
+.modal-body, .modal-body select {
     font-size: 14pt;
 }
 
-.settings-slider label {
+.modal-body label {
     margin: 0px;
 }
 
 .vis-list {
+    position: absolute;
+    top: 119px;
+    width: 100%;
     margin-top: 20px;
+    margin-bottom: 80px;
     text-align: center;
 }
 
@@ -104,8 +132,14 @@ ul {
 
 .breadcrumb {
     border-radius: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(10, 10, 10, 0.9);
     margin: 0;
+
+    position: fixed;
+    top: 70px;
+    height: 48px;
+    width: 100%;
+    z-index: 99;
 }
 
 .custom-control.custom-switch {

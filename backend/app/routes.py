@@ -17,7 +17,18 @@ def index():
     """
     response = {}
     response['category_list'] = get_vis_categories_list()
-    response['current_vis'] = controller.current_vis_name
+
+    return jsonify(response)
+
+@app.route('/get-status/', methods=['GET'])
+def status():
+    """
+    Return the current status, such as current visualization and whether it is on
+    """
+    response = {}
+    response['on'] = controller.get_switched_wemo_state()
+    response['switched_wemo'] = controller.get_switched_wemo()
+    response['current_vis'] = controller.get_current_vis()
 
     return jsonify(response)
 
@@ -49,7 +60,7 @@ def load_memory():
     Load and return the value of an attribute stored in memory
     """
     attribute = request.args['attribute']
-    response = {'value': memory.load(attribute)}
+    response = {'value': memory.load_attribute(attribute)}
     return jsonify(response)
 
 
@@ -75,12 +86,21 @@ def save_settings():
     
     return empty_response 
 
-@app.route('/stop-vis/', methods=['GET'])
-def stop_visualization():
+@app.route('/turn-off/', methods=['GET'])
+def turn_off():
     """
-    Stop running visualizations
+    Stop running visualizations and turn off the switched WEMO, if one is set
     """
-    controller.stop_render()
+    controller.turn_off()
+
+    return empty_response
+
+@app.route('/turn-on/', methods=['GET'])
+def turn_on():
+    """
+    Turn on the switched WEMO, if one is set
+    """
+    controller.turn_on()
 
     return empty_response
 
@@ -92,7 +112,14 @@ def start_visualization():
     """
     controller.start_vis(request.args['visName'])
 
-    memory.save_attribute('last_visualization', request.args['visName'])
+    return empty_response
+
+@app.route('/stop-vis/', methods=['GET'])
+def stop_visualization():
+    """
+    Stop running visualizations
+    """
+    controller.stop_render()
 
     return empty_response
 

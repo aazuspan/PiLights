@@ -1,12 +1,20 @@
 {
-    "last_visualization": "Comet",
     "settings": {
         "Brightness": {
             "current_value": "200",
             "max_value": 255,
             "increment_value": 1,
             "min_value": 0,
-            "label": "Brightness"
+            "label": "Brightness",
+            "type": "slider"
+        },
+        "switch_wemo": {
+            "current_value": {
+                "mac": null,
+                "label": "None"
+            },
+            "label": "Switch WEMO",
+            "type": "select"
         }
     }
 }

@@ -2,21 +2,18 @@ import importlib
 import pkgutil
 import pywemo
 import logging
-
 import os
 import threading
 import time
 
 from backend.visualizations.Visualization import Visualization
+from backend.memory.Memory import Memory
+from backend import constants
+
+if not constants.DEV_MODE:
+    import neopixel
 
 logging.basicConfig(level=logging.DEBUG)
-
-# Development mode disables Raspberry Pi-specific libraries and functionality
-DEV_MODE = False
-
-if not DEV_MODE:
-    import neopixel
-    from backend import constants
 
 
 class Controller:
@@ -24,8 +21,7 @@ class Controller:
     thread_kill_time = 2.5
 
     def __init__(self):
-        if not DEV_MODE:
-
+        if not constants.DEV_MODE:
             self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
                                             constants.PIXEL_COUNT,
                                             pixel_order=constants.BRG,
@@ -36,51 +32,23 @@ class Controller:
             self.pixels = None
             self.visualization_categories = {}
 
+        self.visualization_categories = self.load_visualizations()
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
+        self.memory = Memory()
         self.wemos = self.scan_for_wemos()
-        
+        self.wemos = []
+        self.on = False
     
-    @property
-    def current_vis_name(self):
+    def get_current_vis(self):
         """
-        Return the name of the current visualization if one is playing
+        If a visualization is playing, return a dictionary with its name and category
         """
         if self.current_vis:
-            return self.current_vis.name
-        else:
-            return None
-    
-    def scan_for_wemos(self):
-        """
-        Scan the network for WEMO devices and return them
-        :return : A list of WEMO devices
-        """
-        wemos = []
-        
-        logging.info('Discovering WEMO devices on network...')
-        try:
-            wemos = pywemo.discover_devices()
-            logging.info('{} WEMO devices successfully discovered.'.format(len(wemos)))
+            return {'name': self.current_vis.name, 'category': self.current_vis.category}
+        return None
 
-        except Exception as e:
-            logging.exception(("An error occurred while scanning for WEMO devices. If any"
-            " WEMO names were changed, try unplugging and replugging the WEMO, and then"
-            " restarting this program."))
-
-        return wemos
-
-    def set_wemo_state(self, mac, state):
-        """
-        Set the power state of a Wemo device based on its mac address
-        :param mac: string Mac address of the Wemo device on the network
-        :param state: bool New power state of the Wemo
-        """
-        for wemo in self.wemos:
-            if wemo.mac == mac:
-                wemo.set_state(state)
-    
     def set_brightness(self, value):
         logging.info(f"Setting brightness to {value}")
         self.pixels.brightness = int(value)/255
@@ -175,6 +143,17 @@ class Controller:
 
         self.thread_running = False
 
+    def turn_off(self):
+        """
+        Turn off the switched wemo.
+        """
+        self.set_switched_wemo_state(False)        
+
+    def turn_on(self):
+        """
+        Turn on the switched WEMO, if one is set
+        """
+        self.set_switched_wemo_state(True)
 
     def start_vis(self, name):
         """
@@ -194,12 +173,83 @@ class Controller:
         vis_thread = threading.Thread(target=self.run_vis)
         vis_thread.start()
 
+    def scan_for_wemos(self):
+        """
+        Scan the network for WEMO devices and return them
+        :return : A list of WEMO devices
+        """
+        wemos = []
+        
+        logging.info('Discovering WEMO devices on network...')
+        try:
+            wemos = pywemo.discover_devices()
+            logging.info('{} WEMO devices successfully discovered.'.format(len(wemos)))
+
+        except Exception as e:
+            logging.exception(("An error occurred while scanning for WEMO devices. If any"
+            " WEMO names were changed, try unplugging and replugging the WEMO, and then"
+            " restarting this program."))
+
+        return wemos
+
+    def get_wemo_by_mac(self, mac):
+        """
+        Get the Wemo device based on its mac address
+        :param mac: string Mac address of the Wemo device on the network
+        :param state: pywemo.Switch wemo device
+        """
+        for wemo in self.wemos:
+            if wemo.mac == mac:
+                return wemo
+        return None
+
+    def set_wemo_state(self, mac, state):
+        """
+        Set the power state of a Wemo device based on its mac address
+        :param mac: string Mac address of the Wemo device on the network
+        :param state: bool New power state of the Wemo
+        """
+        device = self.get_wemo_by_mac(mac)
+        
+        if device:
+            device.set_state(state)
+
+    def get_switched_wemo(self):
+        """
+        If a switched WEMO is set in settings, return a dictionary of the WEMOs label and mac address. If not, return None
+        """
+        switch_wemo = self.memory.load_setting('switch_wemo')
+        return switch_wemo['current_value']
+
+    def set_switched_wemo_state(self, state):
+        """
+        Set the power state of the switched WEMO, if one is set in settings
+        :param state: bool power state to set WEMO device to
+        """
+        switched_wemo = self.get_switched_wemo()
+        if switched_wemo:
+            self.set_wemo_state(switched_wemo['mac'], state)
+
+    def get_switched_wemo_state(self):
+        """
+        If a switched WEMO is set in settings, return its current power state. If not, return 1
+        """
+        switched_wemo = self.get_switched_wemo()
+        if switched_wemo['mac']:
+            device = self.get_wemo_by_mac(switched_wemo['mac'])
+            if device:
+                return device.get_state()
+        return 1
+
     def run_vis(self):
         """
         Run a visualization render method in the background until kill_threads is triggered
         """
         self.kill_threads = False
         self.thread_running = True
+
+        if constants.DEV_MODE:
+            return
 
         while not self.kill_threads:
             self.current_vis.render()

@@ -12,6 +12,7 @@ flask-cors = "*"
 rpi-ws281x = "*"
 adafruit-circuitpython-neopixel = "*"
 pywemo = "*"
+opensimplex = "*"
 
 [requires]
 python_version = "3.7"

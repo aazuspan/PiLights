@@ -1,24 +1,38 @@
 import React from 'react';
-import axios from 'axios';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 
 import SettingSlider from './SettingSlider';
-import * as settings from '../settings';
 
 
 class SettingsModal extends React.Component {
-    // Pass all updated settings to the API to be saved into memory
-    applySettings = () => {
-        axios.get(settings.SERVER_ADDR + "save-settings/", {
-            params: {
-                settings: JSON.stringify(this.settings),
-            }
-        })
-    }
-
     componentDidMount = () => {
         // Store a temporary list of updated setting values
         this.settings = {};
+    }
+
+    componentDidUpdate = () => {
+        this.settingsSliders = this.props.settings.map((setting) =>
+            setting.type === "slider" ?
+                <SettingSlider
+                    key={this.props.settings.indexOf(setting)}
+                    label={setting.label}
+                    minValue={setting.min_value}
+                    maxValue={setting.max_value}
+                    incrementValue={setting.increment_value}
+                    currentValue={setting.current_value}
+                    updateSetting={this.updateSetting}
+                />
+                :
+                null
+        );
+
+        this.wemoOptions = this.props.wemos.map((wemo) =>
+            <option
+                key={this.props.wemos.indexOf(wemo)}
+                mac={wemo.mac}>
+                {wemo.name}
+            </option>
+        );
     }
 
     // Update the value of a setting with a given label
@@ -26,19 +40,14 @@ class SettingsModal extends React.Component {
         this.settings[label] = value;
     }
 
-    render = () => {
-        this.settingsSliders = this.props.settings.map((setting) =>
-            <SettingSlider
-                key={this.props.settings.indexOf(setting)}
-                label={setting.label}
-                minValue={setting.min_value}
-                maxValue={setting.max_value}
-                incrementValue={setting.increment_value}
-                currentValue={setting.current_value}
-                updateSetting={this.updateSetting}
-            />
-        );
+    // Handle changes to the switched WEMO select form
+    handleSelectChange = (event) => {
+        let option = event.target.childNodes[event.target.selectedIndex];
+        let currentValue = { mac: option.getAttribute('mac'), label: option.value };
+        this.updateSetting('switch_wemo', currentValue);
+    }
 
+    render = () => {
         return (
             <Modal
                 size="sm"
@@ -55,10 +64,17 @@ class SettingsModal extends React.Component {
                 </Modal.Header>
                 <Modal.Body>
                     {this.settingsSliders}
+                    <Form.Group controlId="powerWemo" title='Select a WEMO for automatic power control.'>
+                        <Form.Label>Switched WEMO™</Form.Label>
+                        <Form.Control as="select" onChange={this.handleSelectChange} defaultValue={this.props.switchedWemo ? this.props.switchedWemo.label : "None"}>
+                            <option>None</option>
+                            {this.wemoOptions}
+                        </Form.Control>
+                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.props.toggleSettings}>Close</Button>
-                    <Button variant="primary" onClick={this.applySettings}>Apply</Button>
+                    <Button variant="primary" onClick={() => { this.props.saveSettings(this.settings) }}>Apply</Button>
                 </Modal.Footer>
             </Modal>
         );
