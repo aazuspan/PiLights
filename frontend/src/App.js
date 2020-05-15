@@ -75,9 +75,6 @@ class App extends React.Component {
       }
     })
       .then(() => {
-        // this.setState({
-        //   currentVis: visName,
-        // });
         this.hideSpinner();
         this.getStatus();
       })
@@ -247,7 +244,6 @@ class App extends React.Component {
           <Breadcrumb.Item active>{this.state.filter}</Breadcrumb.Item>
         </Breadcrumb>
 
-        <Banner currentVis={this.state.currentVis} />
 
         <VisList
           visList={this.state.visList}
@@ -255,6 +251,8 @@ class App extends React.Component {
           filter={this.state.filter}
           startVis={this.startVis}
           filterVis={this.filterVis} />
+
+        <Banner currentVis={this.state.currentVis} stopVis={this.stopVis} />
       </>
     );
   }

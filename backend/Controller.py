@@ -172,8 +172,6 @@ class Controller:
         self.current_vis = vis_class(pixels=self.pixels)
         vis_thread = threading.Thread(target=self.run_vis)
         vis_thread.start()
-        
-        self.set_switched_wemo_state(True)
 
     def scan_for_wemos(self):
         """
@@ -252,7 +250,7 @@ class Controller:
 
         if constants.DEV_MODE:
             return
-            
+
         while not self.kill_threads:
             self.current_vis.render()
             
