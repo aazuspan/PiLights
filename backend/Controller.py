@@ -38,7 +38,7 @@ class Controller:
         self.kill_threads = False
         self.memory = Memory()
         self.wemos = self.scan_for_wemos()
-        self.wemos = []
+        
         self.on = False
     
     def get_current_vis(self):
