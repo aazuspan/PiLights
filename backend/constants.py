@@ -1,5 +1,5 @@
 # Development mode disables Raspberry Pi-specific libraries and functionality
-DEV_MODE = True
+DEV_MODE = False
 
 if not DEV_MODE:
     import board
