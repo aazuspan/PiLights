@@ -1,11 +1,35 @@
+:root {
+    --header-color: #3b3b3b;
+    --banner-color: #343533;
+
+    --bg-start-color: #2c2b2b;
+    --bg-end-color: #161515;
+
+    /* Primary buttons */
+    --primary-color: #4a4b49;
+    /* Secondary buttons */
+    --secondary-color: #f5635c;
+    /* Color of symbols inside of buttons */
+    --secondary-button-color: #161516;
+    /* Important text */
+    --primary-text-color: #fff6e6;
+    /* Less important text */
+    --secondary-text-color: #8f8984;
+}
+
 * {
     padding: 0px;
-    font-family: 'Baloo Chettan 2', cursive;
     font-family: 'Josefin Sans', sans-serif;
 }
 
+html, body {
+    min-height: 100%;
+}
+
 body {
-    background-color: rgb(46, 46, 46);
+    background-color: var(--bg-end-color);;
+    background-image: linear-gradient(0deg, var(--bg-end-color), var(--bg-start-color)) !important;
+    background-attachment: fixed;
 }
 
 .spinner-screen {
@@ -23,7 +47,7 @@ body {
 
 .spinner-screen .spinner-border {
     position: absolute;
-    color: white;
+    color: var(--primary-text-color);
     width: 60px;
     height: 60px;
     top: 0;
@@ -42,11 +66,12 @@ body {
 
 .navbar {
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(-45deg, var(--header-color) 0%, rgb(43, 43, 43) 100%) !important;
 }
 
 .navbar-brand {
     text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-    
+    color: var(--primary-text-color) !important;
 }
 
 .navbar button {
@@ -56,18 +81,21 @@ body {
 .banner {
     padding: 10px;
 
-    background-color: rgba(10, 10, 10, 0.9);
-    color: white;
+    background-color: var(--banner-color);
+    color: var(--primary-text-color);
+    box-shadow: 5px -10px 15px rgba(40, 40, 40, 0.9);
+    border-top: 3px double;
+    border-color:  rgb(59, 59, 59);
 
     position: fixed;
     width: 100%;
     bottom: 0;
-    height: 60px;
+    height: 64px;
     transition: 1s;
 }
 
 .banner-hidden {
-    transform: translateY(60px);
+    transform: translateY(70px);
     transition: 1s;
 }
 
@@ -92,11 +120,6 @@ body {
     text-transform: lowercase;
 }
 
-
-ul {
-    list-style-type: none;
-}
-
 .modal-body, .modal-body select {
     font-size: 14pt;
 }
@@ -115,11 +138,22 @@ ul {
 }
 
 .vis-box {
+    background-color: var(--primary-color);
+    /* background: linear-gradient(90deg, #312f2f, var(--primary-color)); */
+    color: var(--primary-text-color);
+    border-color: transparent;
     box-sizing: border-box;
     width: 90%;
     padding: 6px;
-    margin-bottom: 6px;
+    margin-bottom: 9px;
     text-align: left;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.vis-box:active, .vis-box:hover, .vis-box:focus {
+    background-color: transparent !important;
+    border-color: var(--secondary-color) !important;
+    outline: none !important;
 }
 
 .vis-box h5, .vis-box p, .vis-box hr {
@@ -130,16 +164,31 @@ ul {
     text-align: center;
 }
 
+.vis-box hr {
+    border-color: var(--secondary-text-color);
+}
+.vis-box p {
+    color: var(--secondary-text-color);
+}
+
 .breadcrumb {
     border-radius: 0;
-    background-color: rgba(10, 10, 10, 0.9);
-    margin: 0;
+    background-color: var(--banner-color);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 
     position: fixed;
     top: 70px;
     height: 48px;
     width: 100%;
     z-index: 99;
+}
+
+.breadcrumb a {
+    color: var(--primary-text-color);
+}
+
+.breadcrumb span {
+    color: var(--secondary-text-color);
 }
 
 .custom-control.custom-switch {
@@ -174,6 +223,41 @@ ul {
     display: none;
 }
 
+.nav-link {
+    margin: 0;
+    padding-left: 0;
+}
+
 .dropdown-item {
     font-size: 20px;
+}
+
+.secondary-button, .secondary-button-outline {
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.secondary-button {
+    background-color: var(--secondary-color);
+    color: var(--secondary-button-color);
+    border-color: transparent;
+}
+
+.secondary-button-outline {
+    background-color: transparent;
+    color: var(--secondary-text-color);
+    border-color: var(--secondary-text-color);
+}
+
+.secondary-button:active, .secondary-button:hover, .secondary-button:focus {
+    background-color: var(--secondary-color) !important;
+    background-color: transparent !important;
+    border-color: var(--secondary-color) !important;
+    
+}
+
+.secondary-button:checked {
+    background-color: yellow;
 }

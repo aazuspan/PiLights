@@ -15,7 +15,7 @@ function Banner(props) {
                 <span className="category" >{props.currentVis ? props.currentVis.category : ""}</span>
             </span>
             <span>
-                <Button variant="warning" title="stop" className="float-right" onClick={props.stopVis}>
+                <Button title="stop" className="float-right secondary-button" onClick={props.stopVis}>
                     <FontAwesomeIcon icon={faStop} />
                 </Button>
             </span>

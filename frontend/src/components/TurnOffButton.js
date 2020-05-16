@@ -6,7 +6,7 @@ import { faPowerOff } from '@fortawesome/free-solid-svg-icons'
 
 const TurnOffButton = (props) => {
     return (
-        <Button variant="light" onClick={props.turnOffVis} title="Turn Off" style={{ visibility: props.visibility }}>
+        <Button className="secondary-button" onClick={props.turnOffVis} title="Turn Off" style={{ visibility: props.visibility }}>
             <FontAwesomeIcon icon={faPowerOff} />
         </Button>
     )
