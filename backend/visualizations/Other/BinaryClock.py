@@ -18,7 +18,7 @@ class BinaryClock(Visualization):
     
     digit_spacing = 3
     unit_spacing = 5
-    off_color = (0, 35, 10)
+    off_color = (50, 20, 0)
     on_color = (5, 255, 50)
     ms_delay = 500
     
