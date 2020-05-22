@@ -9,7 +9,7 @@ class Twinkle(Visualization):
     name = 'Twinkle'
     description = 'Random twinkling white pixels over a black background.'
     star_chance = 0.3
-    shooting_star_chance = 0.01
+    shooting_star_chance = 0.0005
     
     def __init__(self, pixels):
         super().__init__(pixels)
@@ -26,12 +26,9 @@ class Twinkle(Visualization):
             star.render()
             
         for shooting_star in self.shooting_stars:
-            shooting_star.move()
-            shooting_star.render()
+            shooting_star.move_and_render()
             
         self.pixels.show()
-        
-        #TODO: Add chance to create shooting star, then render them
     
     def generate_stars(self):
         """
@@ -99,20 +96,21 @@ class StarPixel:
 
 class ShootingStarPixel:
     min_brightness = 0
-    max_brightness = 255
     brightness_delta = 10
     
     def __init__(self, parent, index):
         self.parent = parent
         self.index = index
         
+        self.max_brightness = random.randint(100, 255)
         self.brightness_direction = 1
         self.brightness = self.min_brightness
         self.direction = random.choice([-1, 1])
     
-    def move(self):
+    def move_and_render(self):
         """
-        The shooting star moves in the appropriate direction and changes brightness
+        The shooting star moves in the appropriate direction and changes brightness,
+        then renders if still within bounds
         """
         self.index += self.direction
         
@@ -123,11 +121,21 @@ class ShootingStarPixel:
         else:
             self.brightness = max(0, self.brightness - self.brightness_delta)
 
-        if self.brightness <= 0 or self.index < 0 or self.index >= constants.PIXEL_COUNT - 1:
+        if self.brightness <= 0 or self.is_out_of_bounds():
             self.remove()
+        else:
+            self.render()
         
     def render(self):
         self.parent.pixels[self.index] = (self.brightness, self.brightness, self.brightness)
         
     def remove(self):
         self.parent.shooting_stars.remove(self)
+
+    def is_out_of_bounds(self):
+        """
+        Check if the star is out of the pixel bounds
+        """
+        if self.index < 0 or self.index >= constants.PIXEL_COUNT - 1:
+            return True
+        return False
