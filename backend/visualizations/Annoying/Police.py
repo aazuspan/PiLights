@@ -23,7 +23,7 @@ class Police(Visualization):
         count = 0
         
         for i in range(constants.PIXEL_COUNT):
-            pixel_index = self.wraparound(i + self.index_offset)
+            pixel_index = util.wraparound(i + self.index_offset)
 
             if count < self.color_width:
                 self.pixels[pixel_index] = self.color1
@@ -40,18 +40,3 @@ class Police(Visualization):
             self.offset_direction *= -1
 
         self.pixels.show()
-        
-    def wraparound(self, i):
-        """
-        Get the pixel index wrapped around the strip. For example, pixel 110 in a string of 100 pixels
-        would return 10
-        """
-        if i < 0:
-            while i < 0:
-                i += constants.PIXEL_COUNT
-                
-        elif i >= constants.PIXEL_COUNT:
-            while i >= constants.PIXEL_COUNT:
-                i -= constants.PIXEL_COUNT
-        
-        return i

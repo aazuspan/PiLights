@@ -121,7 +121,7 @@ class ShootingStarPixel:
         else:
             self.brightness = max(0, self.brightness - self.brightness_delta)
 
-        if self.brightness <= 0 or self.is_out_of_bounds():
+        if self.brightness <= 0 or util.pixel_is_out_of_bounds(self.index):
             self.remove()
         else:
             self.render()
@@ -131,11 +131,3 @@ class ShootingStarPixel:
         
     def remove(self):
         self.parent.shooting_stars.remove(self)
-
-    def is_out_of_bounds(self):
-        """
-        Check if the star is out of the pixel bounds
-        """
-        if self.index < 0 or self.index >= constants.PIXEL_COUNT - 1:
-            return True
-        return False

@@ -260,3 +260,26 @@ def floatcolor2intcolor(floatcolor):
         intcolor.append(intband)
         
     return intcolor
+
+
+def pixel_is_out_of_bounds(i):
+    """
+    Check if a pixel index is out of the pixel bounds
+    """
+    if i < 0 or i >= constants.PIXEL_COUNT - 1:
+        return True
+    return False
+
+
+def wraparound(i):
+    """
+    Get the pixel index wrapped around the strip. For example, pixel 110 in a string of 100 pixels
+    would return 10
+    """
+    while i < 0:
+        i += constants.PIXEL_COUNT
+            
+    while i >= constants.PIXEL_COUNT:
+        i -= constants.PIXEL_COUNT
+    
+    return i
