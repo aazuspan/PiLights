@@ -1,4 +1,4 @@
-from backend.visualizations.RandomFades.GenericRandomFade import GenericRandomFade
+from backend.visualizations.Fades.GenericRandomFade import GenericRandomFade
 from backend.visualizations.Visualization import Visualization
 from backend import constants
 
