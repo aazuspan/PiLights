@@ -18,7 +18,7 @@ class BinaryCounter(Visualization):
     
     def render(self):
         self.pixels.fill(self.fill_color)
-        binary_count = util.int2binary(self.count)
+        binary_count = utils.int2binary(self.count)
 
         for i, digit in enumerate(binary_count):
             if digit == "1":

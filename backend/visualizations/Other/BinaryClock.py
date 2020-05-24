@@ -48,8 +48,8 @@ class BinaryClock(Visualization):
     
     def render_seconds(self):
         seconds = datetime.datetime.now().second
-        binary_seconds = util.int2binary(seconds)
-        binary_seconds = self.add_leading_zeros(binary_seconds, len(util.int2binary(59)))
+        binary_seconds = utils.int2binary(seconds)
+        binary_seconds = self.add_leading_zeros(binary_seconds, len(utils.int2binary(59)))
         
         for i, digit in enumerate(binary_seconds):
             if digit == "1":
@@ -59,8 +59,8 @@ class BinaryClock(Visualization):
     
     def render_minutes(self):
         minutes = datetime.datetime.now().minute
-        binary_minutes = util.int2binary(minutes)
-        binary_minutes = self.add_leading_zeros(binary_minutes, len(util.int2binary(59)))
+        binary_minutes = utils.int2binary(minutes)
+        binary_minutes = self.add_leading_zeros(binary_minutes, len(utils.int2binary(59)))
         
         for i, digit in enumerate(binary_minutes):
             if digit == "1":
@@ -70,8 +70,8 @@ class BinaryClock(Visualization):
                 
     def render_hours(self):
         hours = datetime.datetime.now().hour
-        binary_hours = util.int2binary(hours)
-        binary_hours = self.add_leading_zeros(binary_hours, len(util.int2binary(23)))
+        binary_hours = utils.int2binary(hours)
+        binary_hours = self.add_leading_zeros(binary_hours, len(utils.int2binary(23)))
         
         for i, digit in enumerate(binary_hours):
             if digit == "1":

@@ -23,7 +23,7 @@ class Police(Visualization):
         count = 0
         
         for i in range(constants.PIXEL_COUNT):
-            pixel_index = util.wraparound(i + self.index_offset)
+            pixel_index = utils.wraparound(i + self.index_offset)
 
             if count < self.color_width:
                 self.pixels[pixel_index] = self.color1

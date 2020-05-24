@@ -121,7 +121,7 @@ class ShootingStarPixel:
         else:
             self.brightness = max(0, self.brightness - self.brightness_delta)
 
-        if self.brightness <= 0 or util.pixel_is_out_of_bounds(self.index):
+        if self.brightness <= 0 or utils.pixel_is_out_of_bounds(self.index):
             self.remove()
         else:
             self.render()
