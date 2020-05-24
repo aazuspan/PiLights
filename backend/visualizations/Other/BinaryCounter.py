@@ -18,7 +18,7 @@ class BinaryCounter(Visualization):
     
     def render(self):
         self.pixels.fill(self.fill_color)
-        binary_count = self.int2binary(self.count)
+        binary_count = util.int2binary(self.count)
 
         for i, digit in enumerate(binary_count):
             if digit == "1":
@@ -29,9 +29,3 @@ class BinaryCounter(Visualization):
         self.pixels.show()
         utils.sleep_ms(self.ms_delay)
         self.count += 1
-
-    def int2binary(self, x):
-        """
-        Convert an int to binary and return a string
-        """
-        return ("{0:b}".format(x))

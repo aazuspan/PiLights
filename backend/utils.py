@@ -283,3 +283,10 @@ def wraparound(i):
         i -= constants.PIXEL_COUNT
     
     return i
+
+
+def int2binary(x):
+    """
+    Convert an int to binary and return a string
+    """
+    return ("{0:b}".format(x))
