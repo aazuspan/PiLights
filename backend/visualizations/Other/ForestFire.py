@@ -89,8 +89,7 @@ class Tree:
         if not self.burning:
             color = utils.floatcolor2intcolor((0, min(255, self.age), min(40, int(self.age/6))))
         else:
-            interp_bounds = utils.get_interpolation_bounds(self.burn_colors, self.burn_rounds)
-            color = utils.interpolate_color(interp_bounds[0], interp_bounds[1], interp_bounds[2])
+            color = utils.interpolate_color_from_dict(self.burn_colors, self.burn_rounds)
             
         return color
     

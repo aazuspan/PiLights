@@ -104,8 +104,7 @@ class FirePixel:
         """
         Use interpolation to select a color based on temperature from the table of temperature colors
         """
-        interp_bounds = utils.get_interpolation_bounds(self.fire.fire_temp, self.temperature)
-        interp_color = utils.interpolate_color(interp_bounds[0], interp_bounds[1], interp_bounds[2])
+        interp_color = utils.interpolate_color_from_dict(self.fire.fire_temp, self.temperature)
         
         return interp_color
     

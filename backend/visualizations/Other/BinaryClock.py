@@ -42,8 +42,7 @@ class BinaryClock(Visualization):
         hours = datetime.datetime.now().hour
         minutes = datetime.datetime.now().minute
         time = hours + minutes/60
-        interp_bounds = utils.get_interpolation_bounds(self.background_colors, time)
-        interp_color = utils.interpolate_color(interp_bounds[0], interp_bounds[1], interp_bounds[2])
+        interp_color = utils.interpolate_color_from_dict(self.background_colors, time)
         self.pixels.fill(interp_color)
     
     def render_seconds(self):
