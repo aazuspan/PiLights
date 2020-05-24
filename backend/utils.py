@@ -163,14 +163,16 @@ def interpolate_color(start_color, end_color, weight):
     
     return interpolated_color
 
-def interpolate_color_from_dict(dictionary, x):
+def interpolate_color_from_dict(color_dictionary, x):
     """
     Given a value x within the range of the keys of a dictionary, where the values of the dictionary are
-    colors, interpolate the color at location x within the dictionary. 
+    colors, interpolate the color at location x within the dictionary.
+    :param color_dictionary : Dictionary where keys are floats or ints and values are tuple RGB colors
+    :param x: Float or int value to compare with dictionary keys
     """
-    interp_bounds = utils.get_interpolation_bounds(self.background_colors, time)
-    interp_color = utils.interpolate_color(interp_bounds[0], interp_bounds[1], interp_bounds[2])
-    return interp color
+    interp_bounds = get_interpolation_bounds(color_dictionary, x)
+    interp_color = interpolate_color(interp_bounds[0], interp_bounds[1], interp_bounds[2])
+    return interp_color
 
 def get_interpolation_bounds(dictionary, x):
     """
