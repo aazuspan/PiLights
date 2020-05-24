@@ -6,7 +6,7 @@ from backend.visualizations.Visualization import Visualization
 
 class Montecarlo(Visualization):
     name = 'Montecarlo'
-    description = 'Randomly bouncing ball.'
+    description = 'Bouncing ball with 25% chance of bouncing at each corner.'
     
     corners = [35, 78, 83, 93, 119, 128, 133]
     
