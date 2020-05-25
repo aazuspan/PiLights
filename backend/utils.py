@@ -57,25 +57,6 @@ def change_value(current_value, delta, minimum=constants.MIN_BRIGHTNESS, maximum
     return new_val
 
 
-def light_trail(pixels, trail_length, head_color, trail_color, fill_color, delay_ms=0):
-    """
-    Draw a trail of light with a solid head and fading trail that leaves a fill behind
-    """
-    brightness_delta = -int(constants.MAX_BRIGHTNESS / trail_length)
-
-    for i in range(constants.PIXEL_COUNT):
-        pixels[i] = head_color
-
-        for j in range(1, trail_length):
-            fade_color = change_brightness(trail_color, brightness_delta * j)
-            pixels[i - j] = fade_color
-
-        pixels[i - trail_length - 1] = fill_color
-
-        time.sleep(delay_ms / 1000)
-        pixels.show()
-
-
 def solid_fade(pixels, color, delay_ms=0, min_brightness=constants.MIN_BRIGHTNESS, max_brightness=constants.MAX_BRIGHTNESS):
     solid_fade_up(pixels, color, delay_ms, min_brightness, max_brightness)
     solid_fade_down(pixels, color, delay_ms, min_brightness, max_brightness)

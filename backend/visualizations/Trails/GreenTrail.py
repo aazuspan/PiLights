@@ -1,15 +1,13 @@
-from backend.utils import light_trail
-from backend.visualizations.Visualization import Visualization
+from backend.visualizations.Trails.GenericTrail import GenericTrail
 
 
-class GreenTrail(Visualization):
+class GreenTrail(GenericTrail):
     name = 'Green Trail'
     description = 'A light trail with a white head and green trail.'
+    hide = False
 
-    def render(self):
-        light_trail(pixels=self.pixels,
-                    trail_length=15,
-                    head_color=(200, 255, 200),
-                    trail_color=(0, 255, 100),
-                    fill_color=(0, 15, 5),
-                    delay_ms=45)
+    head_color = (200, 255, 200)
+    tail_color = (0, 255, 100)
+    fill_color = (0, 15, 5)
+    trail_length = 15
+    delay_ms = 45

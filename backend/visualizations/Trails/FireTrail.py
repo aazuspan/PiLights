@@ -1,15 +1,13 @@
-from backend.utils import light_trail
-from backend.visualizations.Visualization import Visualization
+from backend.visualizations.Trails.GenericTrail import GenericTrail
 
 
-class FireTrail(Visualization):
+class FireTrail(GenericTrail):
     name = 'Fire trail'
-    description = 'A light trail with a red head and orange trail.'
+    description = 'A light trail with a red head and orange tail.'
+    hide = False
 
-    def render(self):
-        light_trail(pixels=self.pixels,
-                    trail_length=15,
-                    head_color=(255, 100, 0),
-                    trail_color=(200, 100, 0),
-                    fill_color=(15, 5, 0),
-                    delay_ms=45)
+    head_color = (255, 100, 0)
+    tail_color = (200, 100, 0)
+    fill_color = (15, 5, 0)
+    trail_length = 15
+    delay_ms = 45

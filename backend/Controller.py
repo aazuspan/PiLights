@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Controller:
     # Time to wait for visualization threads to read kill_threads and die
-    thread_kill_time = 2.5
+    thread_kill_time = 1
 
     def __init__(self):
         if not constants.DEV_MODE:
@@ -37,7 +37,8 @@ class Controller:
         self.thread_running = False
         self.kill_threads = False
         self.memory = Memory()
-        self.wemos = self.scan_for_wemos()
+        #self.wemos = self.scan_for_wemos()
+        self.wemos = []
         
         self.on = False
     
