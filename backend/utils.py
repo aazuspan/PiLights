@@ -59,7 +59,7 @@ def floatcolor2intcolor(float_color):
 
 def interpolate_value(start_value, end_value, weight):
     """
-    Linearly interpolate between two colors.
+    Linearly interpolate between two values.
     
     :param start_value : Float value to interpolate from
     :param end_value : Float value to interpolate towards
@@ -80,7 +80,7 @@ def interpolate_color(start_color, end_color, weight):
     interpolated_color = []
     
     for i in range(len(start_color)):
-        interpolated_band = start_color[i] + weight * (end_color[i] - start_color[i])
+        interpolated_band = interpolate_value(start_color[i], end_color[i], weight)
         interpolated_color.append(interpolated_band)
     
     interpolated_color = floatcolor2intcolor(interpolated_color)
