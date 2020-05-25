@@ -3,7 +3,7 @@ import time
 from backend import constants
 
 
-# TODO: Refactor this to use change_value function
+# TODO: Remove this method and refactor the Rain vis to interpolate instead
 def change_brightness(color, delta, minimum=constants.MIN_BRIGHTNESS, maximum=constants.MAX_BRIGHTNESS):
     """
     Change the color of a tuple within the brightness range for all bands that are not 0.
@@ -33,73 +33,16 @@ def change_brightness(color, delta, minimum=constants.MIN_BRIGHTNESS, maximum=co
     return new_color
 
 
-def change_value(current_value, delta, minimum=constants.MIN_BRIGHTNESS, maximum=constants.MAX_BRIGHTNESS):
-    """
-    Change the value of a single pixel within the brightness range
-    :param current_value: int current pixel brightness between 0 and 255
-    :param delta: int amount to change value
-    :param minimum: int minimum value to change value to
-    :param maximum: int maximum value to change value to 
-    :return : int value changed by delta
-    """
-    new_val = current_value
-    
-    # Avoid reducing brightness outside of bounds
-    if minimum <= current_value + delta <= maximum and current_value != 0:
-        new_val += delta
-    elif current_value == 0:
-        new_val = 0
-    elif current_value + delta <= minimum:
-        new_val = minimum
-    elif current_value + delta >= maximum:
-        new_val = maximum
-    
-    return new_val
-
-
-def solid_fade(pixels, color, delay_ms=0, min_brightness=constants.MIN_BRIGHTNESS, max_brightness=constants.MAX_BRIGHTNESS):
-    solid_fade_up(pixels, color, delay_ms, min_brightness, max_brightness)
-    solid_fade_down(pixels, color, delay_ms, min_brightness, max_brightness)
-
-
-def solid_fade_up(pixels, color, delay_ms, min_brightness, max_brightness):
-    brightness_delta = 1
-
-    # Change starting color to minimum version of color
-    for band, val in enumerate(color):
-        if val != 0:
-            color[band] = min_brightness
-
-    faded_color = color
-
-    for i in range(min_brightness, max_brightness):
-        faded_color = change_brightness(faded_color, brightness_delta)
-        pixels.fill(faded_color)
-        pixels.show()
-        time.sleep(delay_ms / 1000)
-
-
-def solid_fade_down(pixels, color, delay_ms, min_brightness, max_brightness):
-    brightness_delta = -1
-
-    # Change starting color to maximum version of color
-    for band, val in enumerate(color):
-        if val != 0:
-            color[band] = max_brightness
-
-    faded_color = color
-
-    for i in range(min_brightness, max_brightness):
-        faded_color = change_brightness(faded_color, brightness_delta)
-        pixels.fill(faded_color)
-        pixels.show()
-        time.sleep(delay_ms / 1000)
-        
 def remap(value, current_min, current_max, target_min, target_max):
+    """
+    Arduino-style remap function to shift a value within a current range to a new value within a target range
+    """
     return (value - current_min) * (target_max - target_min) / (current_max - current_min) + target_min
+
 
 def sleep_ms(seconds):
     time.sleep(seconds/1000)
+
 
 def floatcolor2intcolor(float_color):
     """
