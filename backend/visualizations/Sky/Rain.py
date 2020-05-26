@@ -7,34 +7,81 @@ from backend.visualizations.Visualization import Visualization
 
 class Rain(Visualization):
     name = 'Rain'
-    description = 'Random fading blue pixels over a light blue background.'
-
-    drop_color = (100, 150, 200)
-    fill_color = (0, 15, 15)
-    min_drops = 1
-    max_drops = 5
-    min_delay = 0
-    max_delay = 5
-    fade_length = 90
-
+    description = 'Blue raindrops over a dark background'
+    
+    fill_color = (0, 2, 5)
+    
+    def __init__(self, pixels):
+        super().__init__(pixels)
+        
+        self.raindrop_chance = 0.001
+        self.raindrop_duration = 50
+        
+        self.array = [None for i in range(constants.PIXEL_COUNT)]
+    
+    #TODO: Set raindrop chance and duration with a very slow perlin noise to allow fluctuations in rain intensity
+    def update(self):
+        """
+        """
+        self.raindrop_chance = min(1, self.raindrop_chance + 0.001)
+    
+    def generate_raindrops(self):
+        """
+        Random chance of generating new raindrops in cells where there are no raindrops
+        """
+        for i, cell in enumerate(self.array):
+            if not cell:
+                if random.random() < self.raindrop_chance:
+                    self.array[i] = Raindrop(self, i)
+    
     def render(self):
         self.pixels.fill(self.fill_color)
+        self.generate_raindrops()
+        
+        for cell in self.array:
+            if cell:
+                cell.fade()
+                cell.render()
+        
         self.pixels.show()
 
-        num_drops = random.randint(self.min_drops, self.max_drops)
-        drop_indexes = [random.randint(0, constants.PIXEL_COUNT - 1) for i in range(num_drops)]
-
-        faded_color = self.drop_color
-        brightness_delta = -int(constants.MAX_BRIGHTNESS / self.fade_length)
-
-        # Fade drop color
-        for i in range(0, self.fade_length):
-            faded_color = utils.change_brightness(faded_color, brightness_delta, 15)
-
-            # Set all drops simultaneously
-            for drop_index in drop_indexes:
-                self.pixels[drop_index] = faded_color
-
-            self.pixels.show()
-
-        time.sleep(random.randint(self.min_delay, self.max_delay)/1000)
+class Raindrop:
+    color_range = {
+        0: (150, 225, 255),
+        1: (100, 150, 255),
+        2: (50, 100, 150),
+        3: (0, 50, 75),
+        4: (0, 5, 10),
+        5: (0, 2, 5),
+    }
+    
+    def __init__(self, rain, index):
+        self.rain = rain
+        self.index = index
+        self.rounds = 0
+    
+    @property
+    def color(self):
+        """
+        Get the raindrop color by remapping and interpolating the number of rounds
+        """
+        remapped_rounds = utils.remap(self.rounds, 0, self.rain.raindrop_duration, 0, len(self.color_range))
+        return utils.interpolate_color_from_dict(self.color_range, remapped_rounds)
+    
+    def fade(self):
+        """
+        Increment the number of rounds and remove the raindrop if over max rounds
+        """
+        self.rounds += 1
+        
+        if self.rounds >= self.rain.raindrop_duration:
+            self.remove()
+    
+    def remove(self):
+        """
+        Remove the raindrop from the list of raindrops to prevent further rendering
+        """
+        self.rain.array[self.index] = None
+    
+    def render(self):
+        self.rain.pixels[self.index] = self.color
