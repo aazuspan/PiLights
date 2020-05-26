@@ -1,3 +1,4 @@
+import opensimplex
 import random
 import time
 
@@ -11,30 +12,59 @@ class Rain(Visualization):
     
     fill_color = (0, 2, 5)
     
+    min_raindrop_chance = 0.0005
+    max_raindrop_chance = 0.6
+    
+    min_raindrop_duration = 15
+    max_raindrop_duration = 100
+    
     def __init__(self, pixels):
         super().__init__(pixels)
         
-        self.raindrop_chance = 0.001
-        self.raindrop_duration = 50
+        self.noise_index = 0
+        self.noise_interval = 0.001
+        self.perlin_noise = opensimplex.OpenSimplex()
         
-        self.array = [None for i in range(constants.PIXEL_COUNT)]
+        self.intensity = 0.1
+
+        self.array = [random.choice([None, Raindrop(self, i)]) for i in range(constants.PIXEL_COUNT)]
     
-    #TODO: Set raindrop chance and duration with a very slow perlin noise to allow fluctuations in rain intensity
     def update(self):
         """
+        Update rain intensity using Perlin noise
         """
-        self.raindrop_chance = min(1, self.raindrop_chance + 0.001)
+        noise = self.perlin_noise.noise2d(self.noise_index, 0)
+        self.intensity = utils.remap(noise, -1, 1, 0, 1)
+        self.noise_index += self.noise_interval
+        self.intensity = 0.1
+    
+    @property
+    def raindrop_chance(self):
+        """
+        Interpolate raindrop chance based on rain intensity. More intense == more raindrops
+        """
+        return utils.interpolate_value(self.min_raindrop_chance, self.max_raindrop_chance, self.intensity)
+    
+    @property
+    def raindrop_duration(self):
+        """
+        Interpolate raindrop chance based on rain intensity. More intense == faster raindrops
+        """
+        return utils.interpolate_value(self.max_raindrop_duration, self.min_raindrop_duration, self.intensity)
     
     def generate_raindrops(self):
         """
         Random chance of generating new raindrops in cells where there are no raindrops
         """
+        raindrop_chance = self.raindrop_chance
+        
         for i, cell in enumerate(self.array):
             if not cell:
-                if random.random() < self.raindrop_chance:
+                if random.random() < raindrop_chance:
                     self.array[i] = Raindrop(self, i)
     
     def render(self):
+        self.update()
         self.pixels.fill(self.fill_color)
         self.generate_raindrops()
         
