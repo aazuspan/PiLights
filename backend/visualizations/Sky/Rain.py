@@ -10,10 +10,10 @@ class Rain(Visualization):
     name = 'Rain'
     description = 'Blue raindrops over a dark background'
     
-    fill_color = (0, 2, 5)
+    fill_color = (0, 5, 15)
     
     min_raindrop_chance = 0.0005
-    max_raindrop_chance = 0.6
+    max_raindrop_chance = 0.05
     
     min_raindrop_duration = 15
     max_raindrop_duration = 100
@@ -25,7 +25,7 @@ class Rain(Visualization):
         self.noise_interval = 0.001
         self.perlin_noise = opensimplex.OpenSimplex()
         
-        self.intensity = 0.1
+        self.intensity = 0.0
 
         self.array = [random.choice([None, Raindrop(self, i)]) for i in range(constants.PIXEL_COUNT)]
     
@@ -36,7 +36,6 @@ class Rain(Visualization):
         noise = self.perlin_noise.noise2d(self.noise_index, 0)
         self.intensity = utils.remap(noise, -1, 1, 0, 1)
         self.noise_index += self.noise_interval
-        self.intensity = 0.1
     
     @property
     def raindrop_chance(self):
@@ -59,9 +58,8 @@ class Rain(Visualization):
         raindrop_chance = self.raindrop_chance
         
         for i, cell in enumerate(self.array):
-            if not cell:
-                if random.random() < raindrop_chance:
-                    self.array[i] = Raindrop(self, i)
+            if random.random() < raindrop_chance:
+                self.array[i] = Raindrop(self, i)
     
     def render(self):
         self.update()
@@ -75,14 +73,15 @@ class Rain(Visualization):
         
         self.pixels.show()
 
+
 class Raindrop:
     color_range = {
-        0: (150, 225, 255),
+        0: (200, 255, 255),
         1: (100, 150, 255),
         2: (50, 100, 150),
         3: (0, 50, 75),
-        4: (0, 5, 10),
-        5: (0, 2, 5),
+        4: (0, 20, 50),
+        5: (0, 5, 15),
     }
     
     def __init__(self, rain, index):
