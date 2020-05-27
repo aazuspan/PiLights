@@ -37,7 +37,11 @@ class Controller:
         self.thread_running = False
         self.kill_threads = False
         self.memory = Memory()
-        self.wemos = self.scan_for_wemos()
+        
+        if not constants.IGNORE_WEMOS:
+            self.wemos = self.scan_for_wemos()
+        else:
+            self.wemos = []
         
         self.on = False
     

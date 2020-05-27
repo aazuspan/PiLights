@@ -1,5 +1,7 @@
 # Development mode disables Raspberry Pi-specific libraries and functionality
 DEV_MODE = False
+# Use this setting to skip Wemo discovery. Only use this during development.
+IGNORE_WEMOS = True
 
 if not DEV_MODE:
     import board
