@@ -18,7 +18,8 @@ class Rain(Visualization):
     min_raindrop_duration = 15
     max_raindrop_duration = 100
     
-    lightning_chance = 0.01
+    min_lightning_chance = 0.0001
+    max_lightning_chance = 0.005
     
     def __init__(self, pixels):
         super().__init__(pixels)
@@ -43,8 +44,14 @@ class Rain(Visualization):
         noise = self.perlin_noise.noise2d(self.noise_index, 0)
         self.intensity = utils.remap(noise, -1, 1, 0, 1)
         self.noise_index += self.noise_interval
-        self.intensity = 1
     
+    @property
+    def lightning_chance(self):
+        """
+        Interpolate lightning chance based on rain intensity. More intense == more lightning
+        """
+        return utils.interpolate_value(self.min_lightning_chance, self.max_lightning_chance, self.intensity)
+        
     @property
     def raindrop_chance(self):
         """
@@ -125,12 +132,11 @@ class Lightning:
 
 class Raindrop:
     color_range = {
-        0: (200, 255, 255),
-        1: (75, 125, 255),
-        2: (40, 75, 150),
-        3: (0, 50, 75),
-        4: (0, 20, 50),
-        5: (0, 5, 15),
+        0: (50, 150, 150),
+        1: (25, 75, 120),
+        2: (10, 35, 75),
+        3: (0, 15, 50),
+        4: (0, 5, 15),
     }
     
     def __init__(self, rain, index):
