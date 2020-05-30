@@ -13,6 +13,39 @@ class Color:
         self.bits = bits
         self.color = self.parse_color(color)
 
+    def __add__(self, other):
+        """
+        Add a value or color to the color, creating a new color that combines the
+        pixel values.
+        :param other: int, list, tuple, or Color to add to the Color.
+        """
+        if type(other) in [list, tuple]:
+            other = Color(other)
+        elif type(other) == int:
+            other = Color((other, other, other))
+        if type(other) == Color:
+            return Color((self.r + other.r, self.g + other.g, self.b + other.b))
+        
+        else:
+            raise TypeError('Can only add Color, int, tuple, or list to Color.')
+    
+    def __sub__(self, other):
+        """
+        Subtract a value or color to the color, creating a new color that combines the
+        pixel values.
+        :param other: int, list, tuple, or Color to subtract from the Color.
+        """
+        if type(other) in [list, tuple]:
+            other = Color(other)
+        elif type(other) == int:
+            other = Color((other, other, other))
+        if type(other) == Color:
+            return Color((self.r - other.r, self.g - other.g, self.b - other.b))
+
+        else:
+            raise TypeError('Can only subtract Color, int, tuple, or list to Color.')
+
+    
     @property
     def minimum(self):
         """
