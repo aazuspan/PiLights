@@ -18,8 +18,8 @@ class Rain(Visualization):
     min_raindrop_duration = 15
     max_raindrop_duration = 100
     
-    min_lightning_chance = 0.0001
-    max_lightning_chance = 0.005
+    min_lightning_chance = 0.00005
+    max_lightning_chance = 0.001
     
     def __init__(self, pixels):
         super().__init__(pixels)
@@ -84,7 +84,7 @@ class Rain(Visualization):
         
         if self.lightning:
             self.lightning.render()
-
+            
         self.generate_raindrops()
             
         for cell in self.array:
@@ -98,7 +98,7 @@ class Rain(Visualization):
 class Lightning:
     duration = 50
     max_color = (255, 255, 255)
-    min_color = (0, 0, 0)
+    min_color = (50, 50, 50)
     
     def __init__(self, parent):
         self.parent = parent
