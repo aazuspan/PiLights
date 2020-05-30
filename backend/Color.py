@@ -44,7 +44,12 @@ class Color:
 
         else:
             raise TypeError('Can only subtract Color, int, tuple, or list to Color.')
-
+    
+    def __mul__(self, other):
+        raise NotImplementedError('Color multiplication is not supported.')
+    
+    def __truediv__(self, other):
+        raise NotImplementedError('Color division is not supported.')
     
     @property
     def minimum(self):
