@@ -224,3 +224,13 @@ def int2binary(x):
     Convert an int to binary and return a string
     """
     return ("{0:b}".format(x))
+
+
+def clamp(x, min_val, max_val):
+    """
+    Clamp a value x betwen a minimum value and a maximum value.
+    :param x: int value to clamp
+    :param min_val: int minimum value to clamp to
+    :param max_val: int maximum value to clamp to
+    """
+    return max(min(max_val, x), min_val)

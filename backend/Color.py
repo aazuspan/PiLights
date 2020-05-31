@@ -1,13 +1,3 @@
-def clamp(x, min_val, max_val):
-    """
-    Clamp a value x between a minimum value and a maximum value.
-    :param x: int value to clamp
-    :param min_val: int minimum value to clamp to
-    :param max_val: int maximum value to clamp to
-    """
-    return max(min(max_val, x), min_val)
-
-
 class Color:
     def __init__(self, color, bits=8):
         self.bits = bits
@@ -67,21 +57,30 @@ class Color:
         
     @property
     def r(self):
+        """
+        Return the red value
+        """
         return self.color[0]
     
     @property
     def g(self):
+        """
+        Return the green value
+        """
         return self.color[1]
     
     @property
     def b(self):
+        """
+        Return the blue value
+        """
         return self.color[2]
         
     def clamp_value(self, value):
         """
         Clamp a single color value to the value range of this color
         """
-        return clamp(value, self.minimum, self.maximum)
+        return utils.clamp(value, self.minimum, self.maximum)
         
     def parse_color(self, color):
         """
@@ -113,3 +112,12 @@ class Color:
             raise AttributeError('Color must be integer, tuple, or list.')
             
         return parsed
+
+    def interpolate_towards(self, target_color, weight):
+        """
+        Linearly interpolate this color towards another color, in place.
+        :param target_color : Color to interpolate towards
+        :param weight: Float proportion of distance between current and target colors to interpolate to
+        """
+        self.color = utils.interpolate_color(self.color, target_color.color, weight)
+        return self.color
