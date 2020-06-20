@@ -6,7 +6,7 @@ from backend.visualizations.Visualization import Visualization
 
 class Lichtzeitpegel(Visualization):
     name = 'Lichtzeitpegel'
-    description = 'A 24-hour clock.'
+    description = 'A 24-hour, decimal clock (HH MM SS).'
     
     digit_spacing = 2
     place_spacing = 4
@@ -56,15 +56,11 @@ class Lichtzeitpegel(Visualization):
         :param max_number: The maximum number that can be rendered. This is used to space LEDs.
         :param start_index: The pixel index to start rendering the number.
         """
-        
-        #29
-        
-        digits = len(str(max_number)) #2
-        digit_str = self.add_leading_zeros(str(number), digits) #"29"
+        digits = len(str(max_number))
+        digit_str = self.add_leading_zeros(str(number), digits)
         prev_digit_length = 0
         
         for digit in range(digits):
-            # Get the number of LEDs required to render this digit
             max_leds = int(str(max_number)[digit])
             
             digit_value = int(digit_str[digit])
