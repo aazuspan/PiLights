@@ -13,6 +13,7 @@ class Lichtzeitpegel(Visualization):
     unit_spacing = 8
     
     fill_color = (0, 0, 0)
+    off_color = (30, 0, 0)
     on_color = (5, 255, 50)
     
     hour_tens_digits = 2
@@ -60,6 +61,7 @@ class Lichtzeitpegel(Visualization):
         digit_str = self.add_leading_zeros(str(number), digits)
         prev_digit_length = 0
         
+        # For each digit (ones, tens, hundreds, etc)
         for digit in range(digits):
             max_leds = int(str(max_number)[digit])
             
@@ -67,9 +69,15 @@ class Lichtzeitpegel(Visualization):
             digit_length = max_leds * self.digit_spacing
             digit_start = start_index + prev_digit_length + digit_length + (digit * self.place_spacing)
             
-            for led in range(digit_value):
+            for led in range(max_leds):
                 led_index = (digit_start + digits * self.digit_spacing) - (led * self.digit_spacing)
-                self.pixels[led_index] = self.on_color
+                
+                if led < digit_value:
+                    led_color = self.on_color
+                else:
+                    led_color = self.off_color
+                    
+                self.pixels[led_index] = led_color
             
             prev_digit_length = digit_length
     
