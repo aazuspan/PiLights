@@ -16,6 +16,7 @@ class Fireflies(Visualization):
     def __init__(self, pixels):
         super().__init__(pixels)
         self.fireflies = []
+        self.pixels.fill(self.fill_color)
     
     def is_index_free(self, index):
         """
@@ -42,8 +43,6 @@ class Fireflies(Visualization):
         """
         Randomly choose unoccupied indexes and create a new firefly, waiting the appropriate amount of time
         """
-        self.pixels.fill(self.fill_color)
-        
         if len(self.fireflies) < self.max_fireflies and random.random() < self.firefly_chance:
             self.generate_firefly()
         
@@ -67,7 +66,6 @@ class Fireflies(Visualization):
 
 class Firefly:
     max_color = (255, 255, 0)
-    min_color = (0, 0, 0)
     
     fade_in_duration = int(random.gauss(150, 25))
     fade_out_duration = (random.gauss(300, 50))
@@ -76,6 +74,7 @@ class Firefly:
         self.parent = parent
         self.index = index
         self.rounds = 0
+        self.min_color = self.parent.fill_color
         
     @property
     def color(self):
