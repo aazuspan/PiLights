@@ -48,7 +48,7 @@ def floatcolor2intcolor(float_color):
     """
     Convert a color made of floats into a color made of ints
     :param float_color : Tuple of floats (r, g, b)
-    :return : Tuple of ints (r, g, b)
+    :return : Tuple of floats (r, g, b)
     """
     int_color = []
     
@@ -57,6 +57,27 @@ def floatcolor2intcolor(float_color):
     
     return int_color
 
+def interpolate_pixels(pixel_index, color):
+    """
+    Interpolate colors around an intermediate pixel index. For example, if pixel index 4.8
+    is set to red, pixel 4 will be set to dim red and pixel 5 will be set to brighter red.
+    
+    :param pixel_index: Float intermediate pixel index
+    :param color: tuple of ints (r, g, b)
+    :return : tuple of tuples, representing lower index and color and upper index and color
+    """
+    lower_index = math.floor(pixel_index)
+    upper_index = math.ceil(pixel_index)
+    
+    lower_distance = pixel_index - lower_index
+    upper_distance = upper_index - pixel_index
+    
+    lower_color = interpolate_color(color, (0, 0, 0), lower_distance)
+    upper_color = interpolate_color(color, (0, 0, 0), upper_distance)
+    
+    return ((lower_index, lower_color), (upper_index, upper_color))
+    
+    
 def interpolate_value(start_value, end_value, weight):
     """
     Linearly interpolate between two values.
