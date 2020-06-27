@@ -57,6 +57,31 @@ def floatcolor2intcolor(float_color):
     
     return int_color
 
+def get_blurred_pixels(pixel_index, center_color, edge_color=(0, 0, 0), kernel_width=3):
+    """
+    Interpolate colors around a pixel index to create a blurred pixel
+    :param pixel_index: int index of the center pixel
+    :param color: tuple of ints (r, g, b)
+    :param kernel_width: int width of blurred pixels. Must be odd.
+    :return : list of tuples, representing index and color of blurred pixels
+    """
+    
+    if kernel_width % 2 == 0:
+        raise AttributeError("Kernel width must be odd")
+    
+    half_width = int((kernel_width - 1) / 2)
+    
+    pixels = [(pixel_index, center_color)]
+    
+    for offset in range(half_width):
+        for direction in (-1, 1):
+            index = pixel_index + (offset + 1) * direction
+            distance = 1 - (1 / (half_width + 1) * (offset + 1))
+            color = interpolate_color(edge_color, center_color, distance)
+            pixels.append((index, color))
+    
+    return pixels
+
 def interpolate_pixels(pixel_index, color):
     """
     Interpolate colors around an intermediate pixel index. For example, if pixel index 4.8
