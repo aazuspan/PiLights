@@ -1,4 +1,5 @@
 import math
+import random
 import time
 from backend import constants
 
@@ -280,3 +281,6 @@ def clamp(x, min_val, max_val):
     :param max_val: int maximum value to clamp to
     """
     return max(min(max_val, x), min_val)
+
+def random_color():
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
