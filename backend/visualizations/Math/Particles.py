@@ -11,12 +11,27 @@ class Particles(Visualization):
     
     num_particles = 25
     
+    particle_chance = 0.02
+    
     def __init__(self, pixels):
         super().__init__(pixels)
         self.particles = [Particle(random.uniform(0, constants.PIXEL_COUNT), self) for i in range(self.num_particles)]
 
+    def spawn_particles(self):
+        if random.random() < self.particle_chance:
+            random_index = random.uniform(0, constants.PIXEL_COUNT)
+            self.particles.append(Particle(random_index, self))
+    
+    def remove_particles(self):
+        if random.random() < self.particle_chance:
+            random_particle = random.choice(self.particles)
+            self.particles.remove(random_particle)
+        
     def render(self):
         self.pixels.fill((0, 0, 0))
+        
+        self.spawn_particles()
+        self.remove_particles()
         
         for particle in self.particles:
             particle.step()
@@ -26,7 +41,6 @@ class Particles(Visualization):
 
 
 class Particle:
-    color = (255, 0, 0)
     influence_distance = 100
     
     max_speed = 10
@@ -39,6 +53,12 @@ class Particle:
         self.velocity = 0
         self.acceleration = 0
     
+    @property
+    def color(self):
+        red = abs(int(utils.remap(self.velocity, 0, 0.5, 0, 254)))
+        red = min(255, red)
+        return (255, red, red)
+        
     def step(self):
         self.acceleration += self.separate()
         self.update()
