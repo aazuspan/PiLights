@@ -284,3 +284,39 @@ def clamp(x, min_val, max_val):
 
 def random_color():
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+def rgb2hsv(color):
+    """
+    Convert an red, green, blue (RGB) color to hue, saturation, value (HSV)
+    """
+    try:
+        r = color[0]/255
+        g = color[1]/255
+        b = color[2]/255
+    except IndexError:
+        raise AttributeError("Input color must be tuple or list with 3 RGB values.")
+    
+    max_val = max(r, g, b)
+    min_val = min(r, g, b)
+    diff_val = max_val - min_val
+    
+    if max_val == min_val:
+        h = 0
+        
+    elif max_val == r:
+        h = (60 * ((g - b) / diff_val) + 360) % 360
+    
+    elif max_val == g:
+        h = (60 * ((b - r) / diff_val) + 120) % 360
+    
+    elif max_val == b:
+        h = (60 * ((r - g) / diff_val) + 240) % 360
+        
+    if max_val == 0:
+        s = 0
+    else:
+        s = (diff_val / max_val) * 100
+    
+    v = max_val * 100
+    
+    return (h, s, v)
