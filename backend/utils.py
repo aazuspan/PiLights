@@ -252,16 +252,16 @@ def pixel_is_out_of_bounds(i):
     return False
 
 
-def wraparound(i):
+def wraparound(i, minimum=0, maximum=constants.PIXEL_COUNT):
     """
     Get the pixel index wrapped around the strip. For example, pixel 110 in a string of 100 pixels
     would return 10
     """
-    while i < 0:
-        i += constants.PIXEL_COUNT
+    while i < minimum:
+        i += maximum
             
-    while i >= constants.PIXEL_COUNT:
-        i -= constants.PIXEL_COUNT
+    while i >= maximum:
+        i -= maximum
     
     return i
 
@@ -320,3 +320,34 @@ def rgb2hsv(color):
     v = max_val * 100
     
     return (h, s, v)
+
+def rotate_rgb_hue(rgb, degrees):
+    """
+    Take an RGB color and rotate the hue to return a new RGB color
+    """
+    matrix = [[None for i in range(3)] for i in range(3)]
+    
+    cosine = math.cos(math.radians(degrees))
+    sine = math.sin(math.radians(degrees))
+    
+    x = math.sqrt(1/3)
+    y = 1 - cosine
+    
+    matrix[0][0] = cosine + y / 3
+    matrix[0][1] = 1/3 * y - x * sine
+    matrix[0][2] = 1/3 * y + x * sine
+    
+    matrix[1][0] = matrix[0][2]
+    matrix[1][1] = cosine + 1/3 * y
+    matrix[1][2] = matrix[0][1]
+    
+    matrix[2][0] = matrix[1][2]
+    matrix[2][1] = matrix[0][2]
+    matrix[2][2] = matrix[1][1]
+    
+    r = rgb[0] * matrix[0][0] + rgb[1] * matrix[0][1] + rgb[2] * matrix[0][2]
+    g = rgb[0] * matrix[1][0] + rgb[1] * matrix[1][1] + rgb[2] * matrix[1][2]
+    b = rgb[0] * matrix[2][0] + rgb[1] * matrix[2][1] + rgb[2] * matrix[2][2]
+    
+    return (clamp(int(r), 0, 255), clamp(int(g), 0, 255), clamp(int(b), 0, 255))
+    
