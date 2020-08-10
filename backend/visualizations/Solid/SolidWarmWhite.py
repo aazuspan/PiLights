@@ -6,5 +6,5 @@ class SolidWarmWhite(Visualization):
     description = 'Solid warm white light.'
 
     def render(self):
-        self.pixels.fill((255, 225, 200))
+        self.pixels.fill((255, 150, 75))
         self.pixels.show()
