@@ -10,8 +10,16 @@ from backend.visualizations.Visualization import Visualization
 from backend.memory.Memory import Memory
 from backend import constants
 
-if not constants.DEV_MODE:
+# Environment variable may be set by scripts/run_lights.sh
+IGNORE_WEMOS = int(os.environ.get("ignore_wemos", False))
+DEV_MODE = int(os.environ.get("dev_mode", False))
+
+if not DEV_MODE:
     import neopixel
+    import board
+    GPIO_PIN = board.D21
+else:
+    GPIO_PIN = None
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -21,8 +29,8 @@ class Controller:
     thread_kill_time = 0.2
 
     def __init__(self):
-        if not constants.DEV_MODE:
-            self.pixels = neopixel.NeoPixel(constants.GPIO_PIN,
+        if not DEV_MODE:
+            self.pixels = neopixel.NeoPixel(GPIO_PIN,
                                             constants.PIXEL_COUNT,
                                             pixel_order=constants.BRG,
                                             auto_write=False)
@@ -38,7 +46,7 @@ class Controller:
         self.kill_threads = False
         self.memory = Memory()
         
-        if not constants.IGNORE_WEMOS:
+        if not IGNORE_WEMOS:
             self.wemos = self.scan_for_wemos()
         else:
             self.wemos = []
@@ -252,7 +260,7 @@ class Controller:
         self.kill_threads = False
         self.thread_running = True
 
-        if constants.DEV_MODE:
+        if DEV_MODE:
             return
 
         while not self.kill_threads:
