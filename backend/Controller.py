@@ -40,8 +40,7 @@ class Controller:
         else:
             self.pixels = None
             self.visualization_categories = {}
-
-        self.visualization_categories = self.load_visualizations()
+            
         self.current_vis = None
         self.thread_running = False
         self.kill_threads = False
@@ -278,7 +277,7 @@ class Controller:
         
         for vis in self.visualizations:
             try:
-                if vis.name.lower() == name.lower():
+                if vis.name.lower().replace(" ", "_") == name.lower().replace(" ", "_"):
                     return vis
             except AttributeError:
                 logging.error(f'{vis} does not contain a name attribute! Ensure that all Visualization subclasses have a name.')
