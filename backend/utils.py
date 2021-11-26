@@ -51,12 +51,7 @@ def floatcolor2intcolor(float_color):
     :param float_color : Tuple of floats (r, g, b)
     :return : Tuple of floats (r, g, b)
     """
-    int_color = []
-    
-    for i in range(len(float_color)):
-        int_color.append(int(float_color[i]))
-    
-    return int_color
+    return [int(c) for c in float_color]
 
 def get_blurred_pixels(pixel_index, center_color, edge_color=(0, 0, 0), kernel_width=3):
     """
