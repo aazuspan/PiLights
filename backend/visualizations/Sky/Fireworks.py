@@ -19,7 +19,7 @@ class Fireworks(Visualization):
       (255, 0, 25),
       (255, 0, 0),
     ]
-    
+
     def __init__(self, pixels):
         super().__init__(pixels)
         self.fireworks = []

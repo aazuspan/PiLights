@@ -1,16 +1,20 @@
 import os
 import sys
 
+class VisualizationMeta(type):
+    """This metaclass allows a repr for classes rather than instances"""
+    def __repr__(cls):
+        return cls.name
 
-class Visualization:
+class Visualization(metaclass=VisualizationMeta):
     def __init__(self, pixels):
         self.pixels = pixels
-
+    
     name = None
     description = None
     category = None
     hide = False
-
+    
     def render(self):
         return
 
