@@ -5,12 +5,13 @@ import logging
 import os
 import threading
 import time
+import difflib
 
 from backend.visualizations.Visualization import Visualization
 from backend.memory.Memory import Memory
 from backend import constants
 
-# Environment variable may be set by scripts/run_lights.sh
+# Environment variable may be set by scripts/run_lights.sh or backend/preview.py
 IGNORE_WEMOS = int(os.environ.get("ignore_wemos", False))
 DEV_MODE = int(os.environ.get("dev_mode", False))
 
@@ -274,11 +275,15 @@ class Controller:
         :param name: str name of visualization to return
         :return : class of Visualization subclass
         """
+        
         for vis in self.visualizations:
             try:
-                if vis.name == name:
+                if vis.name.lower() == name.lower():
                     return vis
             except AttributeError:
                 logging.error(f'{vis} does not contain a name attribute! Ensure that all Visualization subclasses have a name.')
         
-        return None
+        close = difflib.get_close_matches(name, [vis.name for vis in self.visualizations], n=3, cutoff=0.5)
+        close_hint = f"Close matches: {close}" if close else "No close matches found, either..."
+        
+        raise AttributeError(f'"{name}" could not be found! {close_hint}')
