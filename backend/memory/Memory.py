@@ -3,8 +3,8 @@ import logging
 import os
 
 class Memory:
-    default_memory_file = os.path.join(os.getcwd(), 'memory', 'default_memory.json')
-    memory_file = os.path.join(os.getcwd(), 'memory', 'memory.json')
+    default_memory_file = os.path.join(os.path.dirname(__file__), 'default_memory.json')
+    memory_file = os.path.join(os.path.dirname(__file__), 'memory.json')
 
     def generate_memory_file(self):
         """
